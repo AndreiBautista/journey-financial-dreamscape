@@ -463,16 +463,16 @@ const Phase1 = () => {
               <CardTitle>Budget Visualization</CardTitle>
               <CardDescription>Monthly spending breakdown</CardDescription>
             </CardHeader>
-            <CardContent className="h-[600px]">
+            <CardContent className="h-[700px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart 
-                  margin={{ top: 50, right: 150, bottom: 150, left: 150 }}
+                  margin={{ top: 80, right: 180, bottom: 180, left: 180 }}
                 >
                   <Pie
                     data={budgetItems}
                     cx="50%"
                     cy="40%"
-                    labelLine={{ stroke: '#666', strokeWidth: 0.5 }}
+                    labelLine={{ stroke: '#666', strokeWidth: 0.5, strokeDasharray: "2 2" }}
                     outerRadius={100}
                     innerRadius={60}
                     fill="#8884d8"
@@ -492,7 +492,7 @@ const Phase1 = () => {
                     layout="horizontal" 
                     verticalAlign="bottom" 
                     align="center"
-                    wrapperStyle={{ fontSize: '11px', paddingTop: '80px' }}
+                    wrapperStyle={{ fontSize: '11px', paddingTop: '120px' }}
                   />
                 </PieChart>
               </ResponsiveContainer>

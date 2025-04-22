@@ -542,14 +542,14 @@ const TaxOptimization = () => {
               </div>
             </div>
 
-            <div className="h-[400px] mt-8">
+            <div className="h-[500px] mt-8">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={calculateRothVsTraditional()}
                   margin={{
                     top: 20,
-                    right: 30,
-                    left: 120,
+                    right: 60,
+                    left: 150,
                     bottom: 50
                   }}
                 >
@@ -561,7 +561,7 @@ const TaxOptimization = () => {
                       value: 'Account Value at Retirement', 
                       angle: -90, 
                       position: 'insideLeft',
-                      offset: -90,
+                      offset: -130,
                       style: { textAnchor: 'middle' }
                     }}
                   />
@@ -584,14 +584,14 @@ const TaxOptimization = () => {
             <CardDescription>Compare the long-term impact of Traditional vs Roth 401(k) contributions based on Katie's current contribution</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="h-[400px] mt-8">
+            <div className="h-[500px] mt-8">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={get401kComparisonData()}
                   margin={{
                     top: 20,
-                    right: 30,
-                    left: 120,
+                    right: 60,
+                    left: 150,
                     bottom: 50
                   }}
                 >
@@ -603,7 +603,7 @@ const TaxOptimization = () => {
                       value: 'Account Value at Retirement', 
                       angle: -90, 
                       position: 'insideLeft',
-                      offset: -90,
+                      offset: -130,
                       style: { textAnchor: 'middle' }
                     }}
                   />
