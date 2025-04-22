@@ -99,16 +99,31 @@ const Phase2 = () => {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                       data={aggressiveData}
-                      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                      margin={{ top: 20, right: 20, left: 30, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="year" />
-                      <YAxis tickFormatter={(tick) => `$${tick.toLocaleString()}`} />
+                      <XAxis 
+                        dataKey="year" 
+                        label={{ 
+                          value: 'Year', 
+                          position: 'insideBottomRight', 
+                          offset: -10 
+                        }}
+                      />
+                      <YAxis 
+                        tickFormatter={(tick) => `$${tick.toLocaleString()}`} 
+                        label={{ 
+                          value: 'Balance', 
+                          angle: -90, 
+                          position: 'insideLeft',
+                          style: { textAnchor: 'middle' } 
+                        }}
+                      />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
                       />
-                      <Legend />
+                      <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Area 
                         type="monotone" 
                         dataKey="balance" 
@@ -174,16 +189,31 @@ const Phase2 = () => {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                       data={moderateData}
-                      margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                      margin={{ top: 20, right: 20, left: 30, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="year" />
-                      <YAxis tickFormatter={(tick) => `$${tick.toLocaleString()}`} />
+                      <XAxis 
+                        dataKey="year" 
+                        label={{ 
+                          value: 'Year', 
+                          position: 'insideBottomRight', 
+                          offset: -10 
+                        }}
+                      />
+                      <YAxis 
+                        tickFormatter={(tick) => `$${tick.toLocaleString()}`} 
+                        label={{ 
+                          value: 'Balance', 
+                          angle: -90, 
+                          position: 'insideLeft',
+                          style: { textAnchor: 'middle' } 
+                        }}
+                      />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
                       />
-                      <Legend />
+                      <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Area 
                         type="monotone" 
                         dataKey="balance" 

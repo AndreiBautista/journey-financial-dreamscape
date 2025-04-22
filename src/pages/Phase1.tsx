@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -47,7 +46,7 @@ const Phase1 = () => {
   const unallocatedAmount = netMonthlyIncome - totalBudget;
 
   const updatePercentages = (items: BudgetItem[]) => {
-    const total = items.reduce((sum, item) => sum + item.amount, 0);
+    const total = netMonthlyIncome;
     return items.map(item => ({
       ...item,
       percentage: Math.round((item.amount / total) * 100)
@@ -89,9 +88,30 @@ const Phase1 = () => {
   };
 
   useEffect(() => {
-    // Update percentages whenever netMonthlyIncome changes
     setBudgetItems(updatePercentages(budgetItems));
   }, [netMonthlyIncome]);
+
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }: any) => {
+    if (percent < 0.05) return null;
+    
+    const RADIAN = Math.PI / 180;
+    const radius = outerRadius * 1.1;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    
+    return (
+      <text 
+        x={x} 
+        y={y} 
+        fill="#666"
+        textAnchor={x > cx ? 'start' : 'end'} 
+        dominantBaseline="central"
+        fontSize={12}
+      >
+        {`${name}: ${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -282,13 +302,11 @@ const Phase1 = () => {
         </TabsContent>
       </Tabs>
 
-      {/* Tax Optimization Section */}
       <div className="mt-12">
         <h2 className="text-2xl font-bold text-blue-600 mb-6">Tax Optimization</h2>
         <TaxOptimization />
       </div>
 
-      {/* Insurance Optimization Section */}
       <div className="mt-12">
         <h2 className="text-2xl font-bold text-blue-600 mb-6">Insurance Optimization</h2>
         <InsuranceOptimization />
@@ -297,7 +315,6 @@ const Phase1 = () => {
       <div className="mt-12">
         <h2 className="text-2xl font-bold text-blue-600 mb-6">Zero-Based Budget</h2>
 
-        {/* Net Monthly Income Input */}
         <Card className="shadow-lg hover:shadow-xl transition-all duration-300 mb-8">
           <CardHeader>
             <CardTitle>Net Monthly Income</CardTitle>
@@ -378,7 +395,7 @@ const Phase1 = () => {
                       <tr className="border-t font-bold">
                         <td className="py-2">Total Allocated</td>
                         <td className="text-right py-2">${totalBudget.toLocaleString()}</td>
-                        <td className="text-right py-2">100%</td>
+                        <td className="text-right py-2">{Math.round((totalBudget / netMonthlyIncome) * 100)}%</td>
                         <td></td>
                       </tr>
                       <tr className={`font-bold ${unallocatedAmount < 0 ? 'text-red-500' : 'text-green-500'}`}>
@@ -448,18 +465,17 @@ const Phase1 = () => {
             </CardHeader>
             <CardContent className="h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                   <Pie
                     data={budgetItems}
                     cx="50%"
-                    cy="50%"
+                    cy="45%"
                     labelLine={false}
-                    outerRadius={120}
+                    outerRadius={100}
                     fill="#8884d8"
                     dataKey="amount"
                     nameKey="category"
-                    label={({ name, percent }) => 
-                      percent > 0.03 ? `${name}: ${(percent * 100).toFixed(0)}%` : ''}
+                    label={renderCustomizedLabel}
                   >
                     {budgetItems.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -470,10 +486,10 @@ const Phase1 = () => {
                     labelFormatter={(name) => `${name}`}
                   />
                   <Legend 
-                    layout="vertical" 
+                    layout="horizontal" 
                     verticalAlign="bottom" 
                     align="center"
-                    wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }}
+                    wrapperStyle={{ fontSize: '11px', paddingTop: '20px' }}
                   />
                 </PieChart>
               </ResponsiveContainer>

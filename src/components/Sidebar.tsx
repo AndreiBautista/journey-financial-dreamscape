@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { X, Menu, ChevronRight, Calculator, PiggyBank, Home, TrendingUp, Wallet } from "lucide-react";
+import { ChevronRight, Calculator, PiggyBank, Home, TrendingUp, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -41,31 +41,27 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
         ></div>
       )}
 
-      {/* Toggle button */}
-      <button
-        onClick={toggleSidebar}
-        className={`fixed z-40 flex items-center justify-center w-10 h-10 rounded-full bg-primary text-white shadow-lg 
-        ${isMobile 
-          ? "top-4 left-4" 
-          : isOpen 
-            ? "left-[260px] top-4 transition-all duration-300" 
-            : "left-4 top-4 transition-all duration-300"}`
-        }
-      >
-        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </button>
-
       {/* Sidebar */}
       <div 
         className={cn(
           "fixed top-0 left-0 h-full bg-white shadow-xl z-30 transition-all duration-300 flex flex-col",
-          isOpen ? "w-64" : "w-0",
-          isMobile ? "overflow-hidden" : ""
+          isOpen ? "w-64" : "w-16",
+          isMobile ? (isOpen ? "w-64" : "w-0 overflow-hidden") : ""
         )}
       >
-        <div className="p-5 border-b border-gray-200">
-          {isOpen && (
+        <div className="p-5 border-b border-gray-200 flex items-center justify-between">
+          {isOpen ? (
             <h1 className="text-xl font-bold text-blue-600">Chad & Katie's Financial Journey</h1>
+          ) : (
+            <h1 className="text-xl font-bold text-blue-600">C&K</h1>
+          )}
+          {!isMobile && (
+            <button 
+              onClick={toggleSidebar} 
+              className="p-1 rounded-full hover:bg-blue-100 text-blue-600"
+            >
+              <ChevronRight className={`w-5 h-5 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
           )}
         </div>
 
@@ -80,12 +76,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
                     location.pathname === link.path && "bg-blue-100 text-blue-700 font-medium"
                   )}
                 >
-                  <div className="mr-3 text-gray-500 group-hover:text-blue-600">
+                  <div className="text-gray-500 group-hover:text-blue-600">
                     {link.icon}
                   </div>
                   {isOpen && (
                     <>
-                      <span className="flex-1">{link.label}</span>
+                      <span className="flex-1 ml-3">{link.label}</span>
                       <ChevronRight className="w-4 h-4 text-gray-400" />
                     </>
                   )}
