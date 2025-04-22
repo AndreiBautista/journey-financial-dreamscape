@@ -171,7 +171,7 @@ const Calculator = () => {
                 <XAxis dataKey="year" label={{ value: 'Years', position: 'insideBottomRight', offset: -10 }} />
                 <YAxis 
                   tickFormatter={(value) => `$${Math.round(value).toLocaleString()}`}
-                  label={{ value: 'Value ($)', angle: -90, position: 'insideLeft' }}
+                  label={{ value: '', angle: -90, position: 'insideLeft' }}
                 />
                 <Tooltip 
                   formatter={(value) => [`$${Math.round(Number(value)).toLocaleString()}`, '']}
