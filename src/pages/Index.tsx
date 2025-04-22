@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { PieChart, Pie, Cell, LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
@@ -166,17 +166,17 @@ const Index = () => {
               <CardTitle>Net Worth Projection</CardTitle>
               <CardDescription>10-year forecast based on selected strategy</CardDescription>
             </CardHeader>
-            <CardContent className="h-72">
+            <CardContent className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={netWorthProjection}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  margin={{ top: 20, right: 30, left: 60, bottom: 30 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="year" label={{ value: 'Year', position: 'insideBottomRight', offset: -10 }} />
                   <YAxis 
                     tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
-                    label={{ value: 'Net Worth', angle: -90, position: 'insideLeft' }}
+                    label={{ value: 'Net Worth', angle: -90, position: 'insideLeft', offset: -40 }}
                   />
                   <Tooltip 
                     formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
@@ -211,25 +211,27 @@ const Index = () => {
               <CardTitle>Budget Breakdown</CardTitle>
               <CardDescription>Monthly expenses distribution</CardDescription>
             </CardHeader>
-            <CardContent className="h-72">
+            <CardContent className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart margin={{ top: 20, right: 50, left: 50, bottom: 20 }}>
                   <Pie
                     data={budgetData}
                     cx="50%"
                     cy="50%"
-                    labelLine={false}
-                    outerRadius={100}
+                    labelLine={true}
+                    outerRadius={80}
+                    innerRadius={30}
                     fill="#8884d8"
                     dataKey="value"
                     label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    paddingAngle={2}
                   >
                     {budgetData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip formatter={(value) => `$${value}`} />
-                  <Legend />
+                  <Legend layout="vertical" verticalAlign="middle" align="right" />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>

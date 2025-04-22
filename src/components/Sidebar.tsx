@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronRight, Calculator, PiggyBank, Home, TrendingUp, Wallet } from "lucide-react";
+import { ChevronRight, Calculator, PiggyBank, Home, TrendingUp, Wallet, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -33,6 +33,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
 
   return (
     <>
+      {/* Mobile toggle button */}
+      {isMobile && !isOpen && (
+        <button 
+          onClick={toggleSidebar}
+          className="fixed left-4 top-4 z-40 bg-blue-600 text-white p-2 rounded-full shadow-lg animate-pulse"
+          aria-label="Open sidebar"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+      )}
+
       {/* Overlay for mobile */}
       {isMobile && isOpen && (
         <div 
@@ -61,6 +72,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
               className="p-1 rounded-full hover:bg-blue-100 text-blue-600"
             >
               <ChevronRight className={`w-5 h-5 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+          )}
+          {isMobile && isOpen && (
+            <button 
+              onClick={toggleSidebar} 
+              className="p-1 rounded-full hover:bg-blue-100 text-blue-600"
+            >
+              <ChevronRight className="w-5 h-5" />
             </button>
           )}
         </div>

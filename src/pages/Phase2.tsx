@@ -95,11 +95,11 @@ const Phase2 = () => {
                   <p className="text-sm text-gray-500 mt-1">Expected ready date: Year 3</p>
                 </div>
                 
-                <div className="h-64 mt-6">
+                <div className="h-72 mt-6">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                       data={aggressiveData}
-                      margin={{ top: 20, right: 20, left: 30, bottom: 30 }}
+                      margin={{ top: 20, right: 30, left: 60, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -116,6 +116,7 @@ const Phase2 = () => {
                           value: 'Balance', 
                           angle: -90, 
                           position: 'insideLeft',
+                          offset: -40,
                           style: { textAnchor: 'middle' } 
                         }}
                       />
@@ -185,11 +186,11 @@ const Phase2 = () => {
                   <p className="text-sm text-gray-500 mt-1">Expected ready date: Year 5</p>
                 </div>
                 
-                <div className="h-64 mt-6">
+                <div className="h-72 mt-6">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                       data={moderateData}
-                      margin={{ top: 20, right: 20, left: 30, bottom: 30 }}
+                      margin={{ top: 20, right: 30, left: 60, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -206,6 +207,7 @@ const Phase2 = () => {
                           value: 'Balance', 
                           angle: -90, 
                           position: 'insideLeft',
+                          offset: -40,
                           style: { textAnchor: 'middle' } 
                         }}
                       />
