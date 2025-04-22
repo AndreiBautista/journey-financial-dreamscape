@@ -32,7 +32,7 @@ const InsuranceOptimization = () => {
   
   // Health Insurance
   const [healthDeductible, setHealthDeductible] = useState(3000);
-  const [healthPremium, setHealthPremium] = useState(0 - Employer Sponsored);
+  const [healthPremium, setHealthPremium] = useState(0);
   const [hasHSA, setHasHSA] = useState(false);
   const [hsaContribution, setHsaContribution] = useState(0);
   
