@@ -249,7 +249,7 @@ const TaxOptimization = () => {
     if (percent < 0.05) return null;
     
     const RADIAN = Math.PI / 180;
-    const radius = outerRadius * 1.4; // Increased from 1.1 to 1.4 for more space
+    const radius = outerRadius * 1.8;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
     
@@ -549,7 +549,7 @@ const TaxOptimization = () => {
                   margin={{
                     top: 20,
                     right: 30,
-                    left: 80,
+                    left: 120,
                     bottom: 50
                   }}
                 >
@@ -560,8 +560,9 @@ const TaxOptimization = () => {
                     label={{ 
                       value: 'Account Value at Retirement', 
                       angle: -90, 
-                      position: 'center',
-                      offset: -60
+                      position: 'insideLeft',
+                      offset: -90,
+                      style: { textAnchor: 'middle' }
                     }}
                   />
                   <Tooltip 
@@ -590,7 +591,7 @@ const TaxOptimization = () => {
                   margin={{
                     top: 20,
                     right: 30,
-                    left: 80,
+                    left: 120,
                     bottom: 50
                   }}
                 >
@@ -601,8 +602,9 @@ const TaxOptimization = () => {
                     label={{ 
                       value: 'Account Value at Retirement', 
                       angle: -90, 
-                      position: 'center',
-                      offset: -60
+                      position: 'insideLeft',
+                      offset: -90,
+                      style: { textAnchor: 'middle' }
                     }}
                   />
                   <Tooltip 

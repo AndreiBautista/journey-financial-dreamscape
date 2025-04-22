@@ -95,7 +95,7 @@ const Phase1 = () => {
     if (percent < 0.05) return null;
     
     const RADIAN = Math.PI / 180;
-    const radius = outerRadius * 1.4;
+    const radius = outerRadius * 1.8;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
     
@@ -463,18 +463,18 @@ const Phase1 = () => {
               <CardTitle>Budget Visualization</CardTitle>
               <CardDescription>Monthly spending breakdown</CardDescription>
             </CardHeader>
-            <CardContent className="h-[550px]">
+            <CardContent className="h-[600px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart 
-                  margin={{ top: 30, right: 100, bottom: 100, left: 100 }}
+                  margin={{ top: 50, right: 150, bottom: 150, left: 150 }}
                 >
                   <Pie
                     data={budgetItems}
                     cx="50%"
                     cy="40%"
                     labelLine={{ stroke: '#666', strokeWidth: 0.5 }}
-                    outerRadius={120}
-                    innerRadius={50}
+                    outerRadius={100}
+                    innerRadius={60}
                     fill="#8884d8"
                     dataKey="amount"
                     nameKey="category"
@@ -492,7 +492,7 @@ const Phase1 = () => {
                     layout="horizontal" 
                     verticalAlign="bottom" 
                     align="center"
-                    wrapperStyle={{ fontSize: '11px', paddingTop: '40px' }}
+                    wrapperStyle={{ fontSize: '11px', paddingTop: '80px' }}
                   />
                 </PieChart>
               </ResponsiveContainer>
