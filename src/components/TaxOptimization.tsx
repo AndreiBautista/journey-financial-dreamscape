@@ -7,6 +7,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
 
 const TaxOptimization = () => {
   // Income values
@@ -18,6 +20,11 @@ const TaxOptimization = () => {
   const [katieContribPct, setKatieContribPct] = useState(4);
   const [chadRothContrib, setChadRothContrib] = useState(3000);
   const katieContribAmount = Math.round(katieIncome * (katieContribPct / 100));
+
+  // Add new state for 401(k) comparison
+  const [traditional401kResult, setTraditional401kResult] = useState(0);
+  const [roth401kResult, setRoth401kResult] = useState(0);
+  const [traditional401kTax, setTraditional401kTax] = useState(0);
 
   // Tax deductions
   const [standardDeduction, setStandardDeduction] = useState(29600);
@@ -158,6 +165,55 @@ const TaxOptimization = () => {
   const [expectedReturnRate, setExpectedReturnRate] = useState(8);
   const [currentTaxRate, setCurrentTaxRate] = useState(22);
   const [retirementTaxRate, setRetirementTaxRate] = useState(12);
+
+  // Calculate 401(k) comparison
+  useEffect(() => {
+    const monthlyContribution = katieContribAmount / 12;
+    const monthlyRate = expectedReturnRate / 100 / 12;
+    const totalMonths = yearsToRetirement * 12;
+
+    // Calculate future value using compound interest formula
+    const futureValue = monthlyContribution * (Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate;
+
+    // Traditional 401(k) (pre-tax contribution, taxed at withdrawal)
+    const traditional401kFutureValue = futureValue;
+    const traditional401kTaxAmount = traditional401kFutureValue * (retirementTaxRate / 100);
+    const traditional401kAfterTax = traditional401kFutureValue - traditional401kTaxAmount;
+
+    // Roth 401(k) (post-tax contribution, tax-free withdrawal)
+    const rothContributionAfterTax = katieContribAmount * (1 - (currentTaxRate / 100));
+    const rothMonthlyContribution = rothContributionAfterTax / 12;
+    const rothFutureValue = rothMonthlyContribution * (Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate;
+
+    setTraditional401kResult(Math.round(traditional401kAfterTax));
+    setRoth401kResult(Math.round(rothFutureValue));
+    setTraditional401kTax(Math.round(traditional401kTaxAmount));
+  }, [katieContribAmount, expectedReturnRate, yearsToRetirement, currentTaxRate, retirementTaxRate]);
+
+  // Create data for 401(k) comparison chart
+  const get401kComparisonData = () => [
+    {
+      name: 'Traditional 401(k)',
+      value: traditional401kResult,
+      tax: traditional401kTax,
+      color: '#3b82f6'
+    },
+    {
+      name: 'Roth 401(k)',
+      value: roth401kResult,
+      color: '#10b981'
+    }
+  ];
+
+  // Function to determine recommendation
+  const getRecommendation = () => {
+    if (currentTaxRate < retirementTaxRate) {
+      return "Based on your tax rates, a Roth option might be better since you're currently in a lower tax bracket than expected in retirement.";
+    } else if (currentTaxRate > retirementTaxRate) {
+      return "Based on your tax rates, a Traditional option might be better since you're currently in a higher tax bracket than expected in retirement.";
+    }
+    return "With equal tax rates, both options provide similar benefits. Consider your personal circumstances and future tax expectations.";
+  };
 
   const calculateRothVsTraditional = () => {
     const monthlyContribution = contributionAmount / 12;
@@ -504,8 +560,8 @@ const TaxOptimization = () => {
                     label={{ 
                       value: 'Account Value at Retirement', 
                       angle: -90, 
-                      position: 'insideLeft',
-                      offset: 10
+                      position: 'center',
+                      offset: -60
                     }}
                   />
                   <Tooltip 
@@ -516,6 +572,58 @@ const TaxOptimization = () => {
                 </BarChart>
               </ResponsiveContainer>
             </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="lg:col-span-3">
+        <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
+          <CardHeader>
+            <CardTitle>401(k) Traditional vs Roth Comparison</CardTitle>
+            <CardDescription>Compare the long-term impact of Traditional vs Roth 401(k) contributions based on Katie's current contribution</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="h-[400px] mt-8">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={get401kComparisonData()}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 80,
+                    bottom: 50
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis 
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
+                    label={{ 
+                      value: 'Account Value at Retirement', 
+                      angle: -90, 
+                      position: 'center',
+                      offset: -60
+                    }}
+                  />
+                  <Tooltip 
+                    formatter={(value: any, name: any) => {
+                      if (name === "tax") return [`$${Number(value).toLocaleString()}`, "Tax at Withdrawal"];
+                      return [`$${Number(value).toLocaleString()}`, "After-Tax Value"];
+                    }}
+                  />
+                  <Legend />
+                  <Bar dataKey="value" fill="#3b82f6" name="After-Tax Value" />
+                  <Bar dataKey="tax" fill="#ef4444" name="Tax at Withdrawal" stackId="tax" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <Alert>
+              <InfoIcon className="h-4 w-4" />
+              <AlertTitle>Recommendation</AlertTitle>
+              <AlertDescription>
+                {getRecommendation()}
+              </AlertDescription>
+            </Alert>
           </CardContent>
         </Card>
       </div>
