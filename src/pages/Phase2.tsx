@@ -95,11 +95,11 @@ const Phase2 = () => {
                   <p className="text-sm text-gray-500 mt-1">Expected ready date: Year 3</p>
                 </div>
                 
-                <div className="h-72 mt-6">
+                <div className="h-80 mt-6">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                       data={aggressiveData}
-                      margin={{ top: 20, right: 30, left: 60, bottom: 30 }}
+                      margin={{ top: 20, right: 30, left: 10, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -116,13 +116,15 @@ const Phase2 = () => {
                           value: 'Balance', 
                           angle: -90, 
                           position: 'insideLeft',
-                          offset: -40,
+                          offset: 10,
                           style: { textAnchor: 'middle' } 
                         }}
+                        width={80}
                       />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
                       />
                       <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Area 
@@ -186,11 +188,11 @@ const Phase2 = () => {
                   <p className="text-sm text-gray-500 mt-1">Expected ready date: Year 5</p>
                 </div>
                 
-                <div className="h-72 mt-6">
+                <div className="h-80 mt-6">
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart
                       data={moderateData}
-                      margin={{ top: 20, right: 30, left: 60, bottom: 30 }}
+                      margin={{ top: 20, right: 30, left: 10, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -207,13 +209,15 @@ const Phase2 = () => {
                           value: 'Balance', 
                           angle: -90, 
                           position: 'insideLeft',
-                          offset: -40,
+                          offset: 10,
                           style: { textAnchor: 'middle' } 
                         }}
+                        width={80}
                       />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
                       />
                       <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Area 

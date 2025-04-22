@@ -166,23 +166,38 @@ const Index = () => {
               <CardTitle>Net Worth Projection</CardTitle>
               <CardDescription>10-year forecast based on selected strategy</CardDescription>
             </CardHeader>
-            <CardContent className="h-80">
+            <CardContent className="h-96">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={netWorthProjection}
-                  margin={{ top: 20, right: 30, left: 60, bottom: 30 }}
+                  margin={{ top: 20, right: 30, left: 10, bottom: 30 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="year" label={{ value: 'Year', position: 'insideBottomRight', offset: -10 }} />
+                  <XAxis 
+                    dataKey="year" 
+                    label={{ 
+                      value: 'Year', 
+                      position: 'insideBottomRight', 
+                      offset: -10 
+                    }} 
+                  />
                   <YAxis 
                     tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
-                    label={{ value: 'Net Worth', angle: -90, position: 'insideLeft', offset: -40 }}
+                    label={{ 
+                      value: 'Net Worth', 
+                      angle: -90, 
+                      position: 'insideLeft', 
+                      offset: 10,
+                      style: { textAnchor: 'middle' }
+                    }}
+                    width={80}
                   />
                   <Tooltip 
                     formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                     labelFormatter={(label) => `Year ${label}`}
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
                   />
-                  <Legend />
+                  <Legend verticalAlign="bottom" height={36} />
                   <Line 
                     type="monotone" 
                     dataKey="aggressive" 
@@ -211,16 +226,16 @@ const Index = () => {
               <CardTitle>Budget Breakdown</CardTitle>
               <CardDescription>Monthly expenses distribution</CardDescription>
             </CardHeader>
-            <CardContent className="h-80">
+            <CardContent className="h-96">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 20, right: 50, left: 50, bottom: 20 }}>
+                <PieChart margin={{ top: 20, right: 80, left: 20, bottom: 20 }}>
                   <Pie
                     data={budgetData}
                     cx="50%"
                     cy="50%"
                     labelLine={true}
-                    outerRadius={80}
-                    innerRadius={30}
+                    outerRadius={100}
+                    innerRadius={40}
                     fill="#8884d8"
                     dataKey="value"
                     label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
@@ -230,8 +245,16 @@ const Index = () => {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => `$${value}`} />
-                  <Legend layout="vertical" verticalAlign="middle" align="right" />
+                  <Tooltip 
+                    formatter={(value) => `$${value}`} 
+                    contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
+                  />
+                  <Legend 
+                    layout="vertical" 
+                    verticalAlign="middle" 
+                    align="right" 
+                    wrapperStyle={{ paddingLeft: '20px' }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>

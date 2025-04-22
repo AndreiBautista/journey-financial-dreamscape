@@ -115,11 +115,11 @@ const Phase3 = () => {
                   />
                 </div>
                 
-                <div className="h-64 mt-6">
+                <div className="h-80 mt-6">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={aggressiveLakeFundData}
-                      margin={{ top: 20, right: 20, left: 30, bottom: 30 }}
+                      margin={{ top: 20, right: 20, left: 10, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -132,12 +132,15 @@ const Phase3 = () => {
                           value: 'Balance', 
                           angle: -90, 
                           position: 'insideLeft',
+                          offset: 10,
                           style: { textAnchor: 'middle' } 
                         }}
+                        width={80}
                       />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
                       />
                       <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Bar 
@@ -179,11 +182,11 @@ const Phase3 = () => {
                   />
                 </div>
                 
-                <div className="h-64 mt-6">
+                <div className="h-80 mt-6">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={aggressiveRetirementData}
-                      margin={{ top: 20, right: 20, left: 30, bottom: 30 }}
+                      margin={{ top: 20, right: 20, left: 10, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -196,12 +199,15 @@ const Phase3 = () => {
                           value: 'Balance', 
                           angle: -90, 
                           position: 'insideLeft',
+                          offset: 10,
                           style: { textAnchor: 'middle' } 
                         }}
+                        width={80}
                       />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
                       />
                       <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Bar 
@@ -248,11 +254,11 @@ const Phase3 = () => {
                   />
                 </div>
                 
-                <div className="h-64 mt-6">
+                <div className="h-80 mt-6">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={moderateLakeFundData}
-                      margin={{ top: 20, right: 20, left: 30, bottom: 30 }}
+                      margin={{ top: 20, right: 20, left: 10, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -265,12 +271,15 @@ const Phase3 = () => {
                           value: 'Balance', 
                           angle: -90, 
                           position: 'insideLeft',
+                          offset: 10,
                           style: { textAnchor: 'middle' } 
                         }}
+                        width={80}
                       />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
                       />
                       <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Bar 
@@ -312,11 +321,11 @@ const Phase3 = () => {
                   />
                 </div>
                 
-                <div className="h-64 mt-6">
+                <div className="h-80 mt-6">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={moderateRetirementData}
-                      margin={{ top: 20, right: 20, left: 30, bottom: 30 }}
+                      margin={{ top: 20, right: 20, left: 10, bottom: 30 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -329,12 +338,15 @@ const Phase3 = () => {
                           value: 'Balance', 
                           angle: -90, 
                           position: 'insideLeft',
+                          offset: 10,
                           style: { textAnchor: 'middle' } 
                         }}
+                        width={80}
                       />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
+                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
                       />
                       <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Bar 
@@ -377,7 +389,7 @@ const Phase3 = () => {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={netWorthData}
-                    margin={{ top: 20, right: 20, left: 90, bottom: 5 }}
+                    margin={{ top: 20, right: 20, left: 120, bottom: 5 }}
                     layout="vertical"
                   >
                     <CartesianGrid strokeDasharray="3 3" />
@@ -388,11 +400,12 @@ const Phase3 = () => {
                     <YAxis 
                       dataKey="category" 
                       type="category" 
-                      width={80} 
+                      width={110} 
                     />
                     <Tooltip 
                       formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                       wrapperStyle={{ zIndex: 100 }}
+                      contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
                     />
                     <Legend wrapperStyle={{ paddingTop: 10 }} />
                     <Bar 

@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronRight, Calculator, PiggyBank, Home, TrendingUp, Wallet, Menu } from "lucide-react";
+import { ChevronRight, Calculator, PiggyBank, Home, TrendingUp, Wallet, Menu, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -37,10 +37,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
       {isMobile && !isOpen && (
         <button 
           onClick={toggleSidebar}
-          className="fixed left-4 top-4 z-40 bg-blue-600 text-white p-2 rounded-full shadow-lg animate-pulse"
+          className="fixed left-0 top-1/2 -translate-y-1/2 z-40 bg-blue-600 text-white p-2 rounded-r-md shadow-lg hover:bg-blue-700 transition-all duration-300"
           aria-label="Open sidebar"
         >
-          <Menu className="w-5 h-5" />
+          <ArrowRight className="w-5 h-5" />
         </button>
       )}
 
