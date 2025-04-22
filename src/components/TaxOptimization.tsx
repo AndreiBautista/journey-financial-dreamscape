@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,7 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const TaxOptimization = () => {
   // Income values
@@ -151,6 +150,65 @@ const TaxOptimization = () => {
     if (chadRothContrib < 6500) {
       setChadRothContrib(6500);
     }
+  };
+
+  // Add new state for Roth vs Traditional comparison
+  const [contributionAmount, setContributionAmount] = useState(6000);
+  const [yearsToRetirement, setYearsToRetirement] = useState(30);
+  const [expectedReturnRate, setExpectedReturnRate] = useState(8);
+  const [currentTaxRate, setCurrentTaxRate] = useState(22);
+  const [retirementTaxRate, setRetirementTaxRate] = useState(12);
+
+  const calculateRothVsTraditional = () => {
+    const monthlyContribution = contributionAmount / 12;
+    const monthlyRate = expectedReturnRate / 100 / 12;
+    const totalMonths = yearsToRetirement * 12;
+
+    // Calculate future value using compound interest formula
+    const futureValue = monthlyContribution * (Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate;
+
+    // Traditional IRA (pre-tax contribution, taxed at withdrawal)
+    const traditionalAfterTax = futureValue * (1 - (retirementTaxRate / 100));
+
+    // Roth IRA (post-tax contribution, tax-free withdrawal)
+    const rothContributionAfterTax = contributionAmount * (1 - (currentTaxRate / 100));
+    const rothMonthlyContribution = rothContributionAfterTax / 12;
+    const rothFutureValue = rothMonthlyContribution * (Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate;
+
+    return [
+      {
+        name: 'Traditional IRA',
+        value: Math.round(traditionalAfterTax),
+        color: '#3b82f6'
+      },
+      {
+        name: 'Roth IRA',
+        value: Math.round(rothFutureValue),
+        color: '#10b981'
+      }
+    ];
+  };
+
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }: any) => {
+    if (percent < 0.05) return null;
+    
+    const RADIAN = Math.PI / 180;
+    const radius = outerRadius * 1.4; // Increased from 1.1 to 1.4 for more space
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+    
+    return (
+      <text 
+        x={x} 
+        y={y} 
+        fill="#666"
+        textAnchor={x > cx ? 'start' : 'end'} 
+        dominantBaseline="central"
+        fontSize={12}
+      >
+        {`${name}: ${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
   };
 
   return (
@@ -379,6 +437,88 @@ const TaxOptimization = () => {
           </div>
         </CardContent>
       </Card>
+
+      <div className="lg:col-span-3">
+        <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
+          <CardHeader>
+            <CardTitle>Roth vs Traditional IRA Comparison</CardTitle>
+            <CardDescription>Compare the long-term impact of Roth vs Traditional IRA contributions</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <Label htmlFor="contribution">Annual Contribution ($)</Label>
+                <Input
+                  id="contribution"
+                  type="number"
+                  value={contributionAmount}
+                  onChange={(e) => setContributionAmount(Number(e.target.value))}
+                  max={6500}
+                />
+                <span className="text-xs text-muted-foreground">Max: $6,500 (2023)</span>
+              </div>
+              <div>
+                <Label htmlFor="years">Years to Retirement</Label>
+                <Input
+                  id="years"
+                  type="number"
+                  value={yearsToRetirement}
+                  onChange={(e) => setYearsToRetirement(Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="return">Expected Return Rate (%)</Label>
+                <Input
+                  id="return"
+                  type="number"
+                  value={expectedReturnRate}
+                  onChange={(e) => setExpectedReturnRate(Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="retirementTax">Expected Retirement Tax Rate (%)</Label>
+                <Input
+                  id="retirementTax"
+                  type="number"
+                  value={retirementTaxRate}
+                  onChange={(e) => setRetirementTaxRate(Number(e.target.value))}
+                />
+              </div>
+            </div>
+
+            <div className="h-[400px] mt-8">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={calculateRothVsTraditional()}
+                  margin={{
+                    top: 20,
+                    right: 30,
+                    left: 80,
+                    bottom: 50
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis 
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
+                    label={{ 
+                      value: 'Account Value at Retirement', 
+                      angle: -90, 
+                      position: 'insideLeft',
+                      offset: 10
+                    }}
+                  />
+                  <Tooltip 
+                    formatter={(value: any) => [`$${Number(value).toLocaleString()}`, 'Value at Retirement']}
+                  />
+                  <Legend />
+                  <Bar dataKey="value" fill="#3b82f6" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
