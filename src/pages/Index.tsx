@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -156,7 +155,7 @@ const Index = () => {
         <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{payload.name}</text>
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
-          {`$${value.toLocaleString()} (${(percent * 100).toFixed(0)}%)`}
+          ${value.toLocaleString()} ({(percent * 100).toFixed(0)}%)
         </text>
       </g>
     );
@@ -286,19 +285,17 @@ const Index = () => {
             </CardHeader>
             <CardContent className="h-96">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart className="w-full h-full">
                   <Pie
-                    activeIndex={activeIndex}
-                    activeShape={renderActiveShape}
                     data={budgetData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
+                    labelLine={true}
+                    label={renderActiveShape}
                     outerRadius={140}
                     fill="#8884d8"
                     dataKey="value"
-                    onMouseEnter={onPieEnter}
-                    onMouseLeave={onPieLeave}
+                    isAnimationActive={true}
                   >
                     {budgetData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
