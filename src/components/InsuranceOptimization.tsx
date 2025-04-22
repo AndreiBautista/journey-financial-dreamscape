@@ -20,25 +20,25 @@ const InsuranceOptimization = () => {
   const [autoInsuranceType, setAutoInsuranceType] = useState("full");
   const [lowDeductible, setLowDeductible] = useState(true);
   const [currentAutoDeductible, setCurrentAutoDeductible] = useState(500);
-  const [currentAutoPremium, setCurrentAutoPremium] = useState(1800);
+  const [currentAutoPremium, setCurrentAutoPremium] = useState(4059);
   const [higherAutoDeductible, setHigherAutoDeductible] = useState(1000);
-  const [higherAutoPremium, setHigherAutoPremium] = useState(1400);
+  const [higherAutoPremium, setHigherAutoPremium] = useState(3,247);
   
   // Home Insurance
   const [currentHomeDeductible, setCurrentHomeDeductible] = useState(1000);
-  const [currentHomePremium, setCurrentHomePremium] = useState(1200);
+  const [currentHomePremium, setCurrentHomePremium] = useState(3,564);
   const [higherHomeDeductible, setHigherHomeDeductible] = useState(2500);
-  const [higherHomePremium, setHigherHomePremium] = useState(950);
+  const [higherHomePremium, setHigherHomePremium] = useState(2,850);
   
   // Health Insurance
   const [healthDeductible, setHealthDeductible] = useState(3000);
-  const [healthPremium, setHealthPremium] = useState(4800);
+  const [healthPremium, setHealthPremium] = useState(0 - Employer Sponsored);
   const [hasHSA, setHasHSA] = useState(false);
   const [hsaContribution, setHsaContribution] = useState(0);
   
   // Life Insurance
   const [katieLifeInsurance, setKatieLifeInsurance] = useState(80000);
-  const [chadLifeInsurance, setChadLifeInsurance] = useState(50000);
+  const [chadLifeInsurance, setChadLifeInsurance] = useState();
   const [recommendedLifeInsurance, setRecommendedLifeInsurance] = useState(0);
   
   // Boat Insurance
