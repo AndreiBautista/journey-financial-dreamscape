@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, Sector } from "recharts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -41,6 +42,7 @@ const Phase1 = () => {
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(initialBudgetItems);
   const [newCategory, setNewCategory] = useState("");
   const [newAmount, setNewAmount] = useState(0);
+  const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
   const totalBudget = budgetItems.reduce((sum, item) => sum + item.amount, 0);
   const unallocatedAmount = netMonthlyIncome - totalBudget;
@@ -91,25 +93,55 @@ const Phase1 = () => {
     setBudgetItems(updatePercentages(budgetItems));
   }, [netMonthlyIncome]);
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }: any) => {
-    if (percent < 0.05) return null;
-    
+  const onPieEnter = (_: any, index: number) => {
+    setActiveIndex(index);
+  };
+
+  const onPieLeave = () => {
+    setActiveIndex(undefined);
+  };
+
+  // Custom active shape for pie chart with label lines
+  const renderActiveShape = (props: any) => {
     const RADIAN = Math.PI / 180;
-    const radius = outerRadius * 1.8;
-    const x = cx + radius * Math.cos(-midAngle * RADIAN);
-    const y = cy + radius * Math.sin(-midAngle * RADIAN);
-    
+    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+    const sin = Math.sin(-RADIAN * midAngle);
+    const cos = Math.cos(-RADIAN * midAngle);
+    const sx = cx + (outerRadius + 10) * cos;
+    const sy = cy + (outerRadius + 10) * sin;
+    const mx = cx + (outerRadius + 30) * cos;
+    const my = cy + (outerRadius + 30) * sin;
+    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+    const ey = my;
+    const textAnchor = cos >= 0 ? 'start' : 'end';
+
     return (
-      <text 
-        x={x} 
-        y={y} 
-        fill="#666"
-        textAnchor={x > cx ? 'start' : 'end'} 
-        dominantBaseline="central"
-        fontSize={12}
-      >
-        {`${name}: ${(percent * 100).toFixed(0)}%`}
-      </text>
+      <g>
+        <Sector
+          cx={cx}
+          cy={cy}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          fill={fill}
+        />
+        <Sector
+          cx={cx}
+          cy={cy}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          innerRadius={outerRadius + 6}
+          outerRadius={outerRadius + 10}
+          fill={fill}
+        />
+        <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
+        <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{payload.category}</text>
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
+          {`$${value.toLocaleString()} (${(percent * 100).toFixed(0)}%)`}
+        </text>
+      </g>
     );
   };
 
@@ -467,16 +499,18 @@ const Phase1 = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
+                    activeIndex={activeIndex}
+                    activeShape={renderActiveShape}
                     data={budgetItems}
                     cx="50%"
                     cy="50%"
-                    labelLine={false}
-                    outerRadius={140}
                     innerRadius={60}
+                    outerRadius={140}
                     fill="#8884d8"
                     dataKey="amount"
                     nameKey="category"
-                    label={false}
+                    onMouseEnter={onPieEnter}
+                    onMouseLeave={onPieLeave}
                   >
                     {budgetItems.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -485,11 +519,12 @@ const Phase1 = () => {
                   <Tooltip 
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
+                        const value = Number(payload[0].value);
                         return (
                           <div className="bg-white border border-gray-200 p-2 rounded-lg shadow-lg">
                             <p className="font-medium">{payload[0].name}</p>
-                            <p className="text-blue-600">${Number(payload[0].value).toLocaleString()}</p>
-                            <p className="text-gray-500">{((payload[0].value / netMonthlyIncome) * 100).toFixed(1)}%</p>
+                            <p className="text-blue-600">${value.toLocaleString()}</p>
+                            <p className="text-gray-500">{((value / netMonthlyIncome) * 100).toFixed(1)}%</p>
                           </div>
                         );
                       }

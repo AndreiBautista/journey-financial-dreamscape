@@ -1,8 +1,9 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Sector } from "recharts";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
@@ -102,6 +103,64 @@ const Index = () => {
     { name: "Entertainment", value: 500, color: "#8b5cf6" },
     { name: "Other", value: 1000, color: "#64748b" }
   ];
+
+  // Add total monthly income for percentage calculations
+  const totalMonthlyIncome = taxData.monthlyIncome;
+
+  // State for active pie chart sector
+  const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
+
+  const onPieEnter = (_: any, index: number) => {
+    setActiveIndex(index);
+  };
+
+  const onPieLeave = () => {
+    setActiveIndex(undefined);
+  };
+
+  // Custom active shape for pie chart with label lines
+  const renderActiveShape = (props: any) => {
+    const RADIAN = Math.PI / 180;
+    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+    const sin = Math.sin(-RADIAN * midAngle);
+    const cos = Math.cos(-RADIAN * midAngle);
+    const sx = cx + (outerRadius + 10) * cos;
+    const sy = cy + (outerRadius + 10) * sin;
+    const mx = cx + (outerRadius + 30) * cos;
+    const my = cy + (outerRadius + 30) * sin;
+    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+    const ey = my;
+    const textAnchor = cos >= 0 ? 'start' : 'end';
+
+    return (
+      <g>
+        <Sector
+          cx={cx}
+          cy={cy}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          fill={fill}
+        />
+        <Sector
+          cx={cx}
+          cy={cy}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          innerRadius={outerRadius + 6}
+          outerRadius={outerRadius + 10}
+          fill={fill}
+        />
+        <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
+        <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{payload.name}</text>
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
+          {`$${value.toLocaleString()} (${(percent * 100).toFixed(0)}%)`}
+        </text>
+      </g>
+    );
+  };
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -229,15 +288,17 @@ const Index = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
+                    activeIndex={activeIndex}
+                    activeShape={renderActiveShape}
                     data={budgetData}
                     cx="50%"
                     cy="50%"
-                    labelLine={false}
                     innerRadius={60}
                     outerRadius={140}
                     fill="#8884d8"
                     dataKey="value"
-                    label={false}
+                    onMouseEnter={onPieEnter}
+                    onMouseLeave={onPieLeave}
                   >
                     {budgetData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
@@ -250,7 +311,7 @@ const Index = () => {
                           <div className="bg-white border border-gray-200 p-2 rounded-lg shadow-lg">
                             <p className="font-medium">{payload[0].name}</p>
                             <p className="text-blue-600">${payload[0].value.toLocaleString()}</p>
-                            <p className="text-gray-500">{((payload[0].value / netMonthlyIncome) * 100).toFixed(1)}%</p>
+                            <p className="text-gray-500">{((payload[0].value / totalMonthlyIncome) * 100).toFixed(1)}%</p>
                           </div>
                         );
                       }
