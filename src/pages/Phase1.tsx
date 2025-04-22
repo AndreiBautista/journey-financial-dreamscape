@@ -463,36 +463,38 @@ const Phase1 = () => {
               <CardTitle>Budget Visualization</CardTitle>
               <CardDescription>Monthly spending breakdown</CardDescription>
             </CardHeader>
-            <CardContent className="h-[700px]">
+            <CardContent className="h-[500px]">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart 
-                  margin={{ top: 80, right: 180, bottom: 180, left: 180 }}
-                >
+                <PieChart>
                   <Pie
                     data={budgetItems}
                     cx="50%"
-                    cy="40%"
-                    labelLine={{ stroke: '#666', strokeWidth: 0.5, strokeDasharray: "2 2" }}
-                    outerRadius={100}
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={140}
                     innerRadius={60}
                     fill="#8884d8"
                     dataKey="amount"
                     nameKey="category"
-                    label={renderCustomizedLabel}
+                    label={false}
                   >
                     {budgetItems.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip 
-                    formatter={(value) => `$${Number(value).toLocaleString()}`} 
-                    labelFormatter={(name) => `${name}`}
-                  />
-                  <Legend 
-                    layout="horizontal" 
-                    verticalAlign="bottom" 
-                    align="center"
-                    wrapperStyle={{ fontSize: '11px', paddingTop: '120px' }}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-white border border-gray-200 p-2 rounded-lg shadow-lg">
+                            <p className="font-medium">{payload[0].name}</p>
+                            <p className="text-blue-600">${Number(payload[0].value).toLocaleString()}</p>
+                            <p className="text-gray-500">{((payload[0].value / netMonthlyIncome) * 100).toFixed(1)}%</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
                   />
                 </PieChart>
               </ResponsiveContainer>

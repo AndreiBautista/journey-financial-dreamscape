@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -228,32 +227,35 @@ const Index = () => {
             </CardHeader>
             <CardContent className="h-96">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart margin={{ top: 20, right: 80, left: 20, bottom: 20 }}>
+                <PieChart>
                   <Pie
                     data={budgetData}
                     cx="50%"
                     cy="50%"
-                    labelLine={true}
-                    outerRadius={100}
-                    innerRadius={40}
+                    labelLine={false}
+                    innerRadius={60}
+                    outerRadius={140}
                     fill="#8884d8"
                     dataKey="value"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    paddingAngle={2}
+                    label={false}
                   >
                     {budgetData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
                   <Tooltip 
-                    formatter={(value) => `$${value}`} 
-                    contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
-                  />
-                  <Legend 
-                    layout="vertical" 
-                    verticalAlign="middle" 
-                    align="right" 
-                    wrapperStyle={{ paddingLeft: '20px' }}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-white border border-gray-200 p-2 rounded-lg shadow-lg">
+                            <p className="font-medium">{payload[0].name}</p>
+                            <p className="text-blue-600">${payload[0].value.toLocaleString()}</p>
+                            <p className="text-gray-500">{((payload[0].value / netMonthlyIncome) * 100).toFixed(1)}%</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
                   />
                 </PieChart>
               </ResponsiveContainer>
