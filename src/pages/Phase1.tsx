@@ -36,7 +36,7 @@ const Phase1 = () => {
     { id: "6", category: "Debt Payments", amount: 1925, color: "#ef4444", percentage: 15 },
     { id: "7", category: "Savings", amount: 1800, color: "#14b8a6", percentage: 18 },
     { id: "8", category: "Entertainment", amount: 500, color: "#8b5cf6", percentage: 5 },
-    { id: "9", category: "Other", amount: 1000, color: "#64748b", percentage: 10 },
+    { id: "9", category: "Other (Baby + Chad's Roth IRA Included)", amount: 1000, color: "#64748b", percentage: 10 },
   ];
 
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(initialBudgetItems);
