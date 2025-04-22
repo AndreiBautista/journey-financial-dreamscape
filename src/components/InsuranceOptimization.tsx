@@ -22,13 +22,13 @@ const InsuranceOptimization = () => {
   const [currentAutoDeductible, setCurrentAutoDeductible] = useState(500);
   const [currentAutoPremium, setCurrentAutoPremium] = useState(4059);
   const [higherAutoDeductible, setHigherAutoDeductible] = useState(1000);
-  const [higherAutoPremium, setHigherAutoPremium] = useState(3,247);
+  const [higherAutoPremium, setHigherAutoPremium] = useState(3247);
   
   // Home Insurance
   const [currentHomeDeductible, setCurrentHomeDeductible] = useState(1000);
-  const [currentHomePremium, setCurrentHomePremium] = useState(3,564);
+  const [currentHomePremium, setCurrentHomePremium] = useState(3564);
   const [higherHomeDeductible, setHigherHomeDeductible] = useState(2500);
-  const [higherHomePremium, setHigherHomePremium] = useState(2,850);
+  const [higherHomePremium, setHigherHomePremium] = useState(2850);
   
   // Health Insurance
   const [healthDeductible, setHealthDeductible] = useState(3000);
