@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -86,6 +85,15 @@ const Phase3 = () => {
   const aggressiveRetirementData = generateRetirementData(16100, 10);
   const moderateRetirementData = generateRetirementData(7800, 10);
 
+  // Enhanced tooltip style for better appearance
+  const tooltipStyle = {
+    backgroundColor: 'white',
+    border: '1px solid #ccc',
+    borderRadius: '10px',
+    padding: '10px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+  };
+
   return (
     <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-blue-600 mb-8">Phase 3: Lake Property & Wealth (Years 6-10)</h1>
@@ -98,7 +106,7 @@ const Phase3 = () => {
         
         <TabsContent value="aggressive" className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <CardHeader>
                 <CardTitle>Lake Fund Projection</CardTitle>
                 <CardDescription>$800/month starting Year 3</CardDescription>
@@ -120,6 +128,7 @@ const Phase3 = () => {
                     <BarChart
                       data={aggressiveLakeFundData}
                       margin={{ top: 20, right: 20, left: 10, bottom: 30 }}
+                      className="animated-chart"
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -128,19 +137,12 @@ const Phase3 = () => {
                       />
                       <YAxis 
                         tickFormatter={(tick) => `$${(tick / 1000).toFixed(0)}K`} 
-                        label={{ 
-                          value: 'Balance', 
-                          angle: -90, 
-                          position: 'insideLeft',
-                          offset: 10,
-                          style: { textAnchor: 'middle' } 
-                        }}
                         width={80}
                       />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
+                        contentStyle={tooltipStyle}
                       />
                       <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Bar 
@@ -148,6 +150,7 @@ const Phase3 = () => {
                         name="Lake Fund" 
                         fill="#0ea5e9" 
                         radius={[4, 4, 0, 0]}
+                        className="hover:opacity-80 transition-opacity"
                       />
                     </BarChart>
                   </ResponsiveContainer>
@@ -165,7 +168,7 @@ const Phase3 = () => {
               </CardContent>
             </Card>
             
-            <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <CardHeader>
                 <CardTitle>Retirement Growth</CardTitle>
                 <CardDescription>$16,100 annual contribution (8% growth)</CardDescription>
@@ -187,6 +190,7 @@ const Phase3 = () => {
                     <BarChart
                       data={aggressiveRetirementData}
                       margin={{ top: 20, right: 20, left: 10, bottom: 30 }}
+                      className="animated-chart"
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -195,19 +199,12 @@ const Phase3 = () => {
                       />
                       <YAxis 
                         tickFormatter={(tick) => `$${(tick / 1000).toFixed(0)}K`} 
-                        label={{ 
-                          value: 'Balance', 
-                          angle: -90, 
-                          position: 'insideLeft',
-                          offset: 10,
-                          style: { textAnchor: 'middle' } 
-                        }}
                         width={80}
                       />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
+                        contentStyle={tooltipStyle}
                       />
                       <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Bar 
@@ -215,6 +212,7 @@ const Phase3 = () => {
                         name="Retirement" 
                         fill="#4f46e5" 
                         radius={[4, 4, 0, 0]}
+                        className="hover:opacity-80 transition-opacity"
                       />
                     </BarChart>
                   </ResponsiveContainer>
@@ -237,7 +235,7 @@ const Phase3 = () => {
         
         <TabsContent value="moderate" className="space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <CardHeader>
                 <CardTitle>Lake Fund Projection</CardTitle>
                 <CardDescription>$300/month starting Year 4</CardDescription>
@@ -259,6 +257,7 @@ const Phase3 = () => {
                     <BarChart
                       data={moderateLakeFundData}
                       margin={{ top: 20, right: 20, left: 10, bottom: 30 }}
+                      className="animated-chart"
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -267,19 +266,12 @@ const Phase3 = () => {
                       />
                       <YAxis 
                         tickFormatter={(tick) => `$${(tick / 1000).toFixed(0)}K`} 
-                        label={{ 
-                          value: 'Balance', 
-                          angle: -90, 
-                          position: 'insideLeft',
-                          offset: 10,
-                          style: { textAnchor: 'middle' } 
-                        }}
                         width={80}
                       />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
+                        contentStyle={tooltipStyle}
                       />
                       <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Bar 
@@ -287,6 +279,7 @@ const Phase3 = () => {
                         name="Lake Fund" 
                         fill="#0ea5e9" 
                         radius={[4, 4, 0, 0]}
+                        className="hover:opacity-80 transition-opacity"
                       />
                     </BarChart>
                   </ResponsiveContainer>
@@ -304,7 +297,7 @@ const Phase3 = () => {
               </CardContent>
             </Card>
             
-            <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card className="shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <CardHeader>
                 <CardTitle>Retirement Growth</CardTitle>
                 <CardDescription>$7,800 annual contribution (8% growth)</CardDescription>
@@ -326,6 +319,7 @@ const Phase3 = () => {
                     <BarChart
                       data={moderateRetirementData}
                       margin={{ top: 20, right: 20, left: 10, bottom: 30 }}
+                      className="animated-chart"
                     >
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
@@ -334,19 +328,12 @@ const Phase3 = () => {
                       />
                       <YAxis 
                         tickFormatter={(tick) => `$${(tick / 1000).toFixed(0)}K`} 
-                        label={{ 
-                          value: 'Balance', 
-                          angle: -90, 
-                          position: 'insideLeft',
-                          offset: 10,
-                          style: { textAnchor: 'middle' } 
-                        }}
                         width={80}
                       />
                       <Tooltip 
                         formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
                         labelFormatter={(label) => `Year ${label}`}
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
+                        contentStyle={tooltipStyle}
                       />
                       <Legend wrapperStyle={{ paddingTop: 10 }} />
                       <Bar 
@@ -354,6 +341,7 @@ const Phase3 = () => {
                         name="Retirement" 
                         fill="#4f46e5" 
                         radius={[4, 4, 0, 0]}
+                        className="hover:opacity-80 transition-opacity"
                       />
                     </BarChart>
                   </ResponsiveContainer>

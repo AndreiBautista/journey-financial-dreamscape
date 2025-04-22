@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +7,8 @@ import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tool
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import { BudgetPieChart } from "@/components/charts/BudgetPieChart";
+import { NetWorthChart } from "@/components/charts/NetWorthChart";
 
 const Index = () => {
   const [track, setTrack] = useState<"aggressive" | "moderate">("aggressive");
@@ -103,63 +106,8 @@ const Index = () => {
     { name: "Other", value: 1000, color: "#64748b" }
   ];
 
-  // Add total monthly income for percentage calculations
+  // Total monthly income for percentage calculations
   const totalMonthlyIncome = taxData.monthlyIncome;
-
-  // State for active pie chart sector
-  const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
-
-  const onPieEnter = (_: any, index: number) => {
-    setActiveIndex(index);
-  };
-
-  const onPieLeave = () => {
-    setActiveIndex(undefined);
-  };
-
-  // Custom active shape for pie chart with label lines
-  const renderActiveShape = (props: any) => {
-    const RADIAN = Math.PI / 180;
-    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
-    const sin = Math.sin(-RADIAN * midAngle);
-    const cos = Math.cos(-RADIAN * midAngle);
-    const sx = cx + (outerRadius + 10) * cos;
-    const sy = cy + (outerRadius + 10) * sin;
-    const mx = cx + (outerRadius + 30) * cos;
-    const my = cy + (outerRadius + 30) * sin;
-    const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-    const ey = my;
-    const textAnchor = cos >= 0 ? 'start' : 'end';
-
-    return (
-      <g>
-        <Sector
-          cx={cx}
-          cy={cy}
-          innerRadius={innerRadius}
-          outerRadius={outerRadius}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          fill={fill}
-        />
-        <Sector
-          cx={cx}
-          cy={cy}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          innerRadius={outerRadius + 6}
-          outerRadius={outerRadius + 10}
-          fill={fill}
-        />
-        <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-        <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{payload.name}</text>
-        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
-          ${value.toLocaleString()} ({(percent * 100).toFixed(0)}%)
-        </text>
-      </g>
-    );
-  };
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -224,57 +172,10 @@ const Index = () => {
               <CardDescription>10-year forecast based on selected strategy</CardDescription>
             </CardHeader>
             <CardContent className="h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart
-                  data={netWorthProjection}
-                  margin={{ top: 20, right: 30, left: 10, bottom: 30 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="year" 
-                    label={{ 
-                      value: 'Year', 
-                      position: 'insideBottomRight', 
-                      offset: -10 
-                    }} 
-                  />
-                  <YAxis 
-                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}K`}
-                    label={{ 
-                      value: 'Net Worth', 
-                      angle: -90, 
-                      position: 'insideLeft', 
-                      offset: 10,
-                      style: { textAnchor: 'middle' }
-                    }}
-                    width={80}
-                  />
-                  <Tooltip 
-                    formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
-                    labelFormatter={(label) => `Year ${label}`}
-                    contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
-                  />
-                  <Legend verticalAlign="bottom" height={36} />
-                  <Line 
-                    type="monotone" 
-                    dataKey="aggressive" 
-                    name="Aggressive Track" 
-                    stroke="#0ea5e9" 
-                    activeDot={{ r: 8 }} 
-                    strokeWidth={track === "aggressive" ? 3 : 1}
-                    opacity={track === "aggressive" ? 1 : 0.5}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="moderate" 
-                    name="Moderate Track" 
-                    stroke="#f59e0b" 
-                    activeDot={{ r: 8 }}
-                    strokeWidth={track === "moderate" ? 3 : 1}
-                    opacity={track === "moderate" ? 1 : 0.5}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              <NetWorthChart 
+                data={netWorthProjection} 
+                track={track} 
+              />
             </CardContent>
           </Card>
           
@@ -284,39 +185,10 @@ const Index = () => {
               <CardDescription>Monthly expenses distribution</CardDescription>
             </CardHeader>
             <CardContent className="h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart className="w-full h-full">
-                  <Pie
-                    data={budgetData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={true}
-                    label={renderActiveShape}
-                    outerRadius={140}
-                    fill="#8884d8"
-                    dataKey="value"
-                    isAnimationActive={true}
-                  >
-                    {budgetData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="bg-white border border-gray-200 p-2 rounded-lg shadow-lg">
-                            <p className="font-medium">{payload[0].name}</p>
-                            <p className="text-blue-600">${payload[0].value.toLocaleString()}</p>
-                            <p className="text-gray-500">{((payload[0].value / totalMonthlyIncome) * 100).toFixed(1)}%</p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+              <BudgetPieChart 
+                data={budgetData} 
+                totalAmount={totalMonthlyIncome} 
+              />
             </CardContent>
           </Card>
         </div>
