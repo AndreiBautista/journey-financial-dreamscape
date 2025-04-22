@@ -64,7 +64,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
         )}
       >
         <div className="p-5 border-b border-gray-200">
-          <h1 className="text-xl font-bold text-blue-600">Chad & Katie's Financial Journey</h1>
+          {isOpen && (
+            <h1 className="text-xl font-bold text-blue-600">Chad & Katie's Financial Journey</h1>
+          )}
         </div>
 
         <nav className="flex-1 px-3 py-4 overflow-y-auto">
@@ -81,8 +83,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
                   <div className="mr-3 text-gray-500 group-hover:text-blue-600">
                     {link.icon}
                   </div>
-                  <span className="flex-1">{link.label}</span>
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                  {isOpen && (
+                    <>
+                      <span className="flex-1">{link.label}</span>
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                    </>
+                  )}
                 </Link>
               </li>
             ))}

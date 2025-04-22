@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
@@ -7,6 +7,13 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recha
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import TaxOptimization from "@/components/TaxOptimization";
+import InsuranceOptimization from "@/components/InsuranceOptimization";
 
 interface BudgetItem {
   id: string;
@@ -18,6 +25,7 @@ interface BudgetItem {
 
 const Phase1 = () => {
   const [track, setTrack] = useState<"aggressive" | "moderate">("aggressive");
+  const [netMonthlyIncome, setNetMonthlyIncome] = useState(10725);
   
   const initialBudgetItems: BudgetItem[] = [
     { id: "1", category: "Housing", amount: 2500, color: "#3b82f6", percentage: 25 },
@@ -36,6 +44,7 @@ const Phase1 = () => {
   const [newAmount, setNewAmount] = useState(0);
 
   const totalBudget = budgetItems.reduce((sum, item) => sum + item.amount, 0);
+  const unallocatedAmount = netMonthlyIncome - totalBudget;
 
   const updatePercentages = (items: BudgetItem[]) => {
     const total = items.reduce((sum, item) => sum + item.amount, 0);
@@ -74,6 +83,15 @@ const Phase1 = () => {
     const updatedItems = budgetItems.filter(item => item.id !== id);
     setBudgetItems(updatePercentages(updatedItems));
   };
+
+  const updateNetMonthlyIncome = (value: number) => {
+    setNetMonthlyIncome(value);
+  };
+
+  useEffect(() => {
+    // Update percentages whenever netMonthlyIncome changes
+    setBudgetItems(updatePercentages(budgetItems));
+  }, [netMonthlyIncome]);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -263,9 +281,46 @@ const Phase1 = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Tax Optimization Section */}
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold text-blue-600 mb-6">Tax Optimization</h2>
+        <TaxOptimization />
+      </div>
+
+      {/* Insurance Optimization Section */}
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold text-blue-600 mb-6">Insurance Optimization</h2>
+        <InsuranceOptimization />
+      </div>
       
       <div className="mt-12">
         <h2 className="text-2xl font-bold text-blue-600 mb-6">Zero-Based Budget</h2>
+
+        {/* Net Monthly Income Input */}
+        <Card className="shadow-lg hover:shadow-xl transition-all duration-300 mb-8">
+          <CardHeader>
+            <CardTitle>Net Monthly Income</CardTitle>
+            <CardDescription>Enter your total net monthly income</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-end gap-4">
+              <div className="grow">
+                <Label htmlFor="monthlyIncome">Monthly Income (After Taxes)</Label>
+                <Input
+                  id="monthlyIncome"
+                  type="number"
+                  value={netMonthlyIncome}
+                  onChange={(e) => updateNetMonthlyIncome(Number(e.target.value))}
+                  className="text-lg font-medium"
+                />
+              </div>
+              <div className="text-2xl font-bold text-blue-600">
+                ${netMonthlyIncome.toLocaleString()}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
@@ -321,9 +376,15 @@ const Phase1 = () => {
                     </tbody>
                     <tfoot>
                       <tr className="border-t font-bold">
-                        <td className="py-2">Total</td>
+                        <td className="py-2">Total Allocated</td>
                         <td className="text-right py-2">${totalBudget.toLocaleString()}</td>
                         <td className="text-right py-2">100%</td>
+                        <td></td>
+                      </tr>
+                      <tr className={`font-bold ${unallocatedAmount < 0 ? 'text-red-500' : 'text-green-500'}`}>
+                        <td className="py-2">Unallocated</td>
+                        <td className="text-right py-2">${unallocatedAmount.toLocaleString()}</td>
+                        <td className="text-right py-2">{Math.round((unallocatedAmount / netMonthlyIncome) * 100)}%</td>
                         <td></td>
                       </tr>
                     </tfoot>
@@ -354,6 +415,28 @@ const Phase1 = () => {
                     Add Category
                   </Button>
                 </div>
+
+                {unallocatedAmount < 0 && (
+                  <Alert variant="destructive" className="mt-6">
+                    <InfoIcon className="h-4 w-4" />
+                    <AlertTitle>Budget Overallocated</AlertTitle>
+                    <AlertDescription>
+                      Your expenses exceed your income by ${Math.abs(unallocatedAmount).toLocaleString()}. 
+                      Consider reducing some categories or increasing your income.
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {unallocatedAmount > 0 && (
+                  <Alert className="mt-6 border-green-500">
+                    <InfoIcon className="h-4 w-4 text-green-500" />
+                    <AlertTitle className="text-green-600">Unallocated Funds</AlertTitle>
+                    <AlertDescription>
+                      You have ${unallocatedAmount.toLocaleString()} unallocated. Consider adding to savings, 
+                      investments, or debt repayment.
+                    </AlertDescription>
+                  </Alert>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -375,14 +458,23 @@ const Phase1 = () => {
                     fill="#8884d8"
                     dataKey="amount"
                     nameKey="category"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => 
+                      percent > 0.03 ? `${name}: ${(percent * 100).toFixed(0)}%` : ''}
                   >
                     {budgetItems.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => `$${value}`} />
-                  <Legend />
+                  <Tooltip 
+                    formatter={(value) => `$${Number(value).toLocaleString()}`} 
+                    labelFormatter={(name) => `${name}`}
+                  />
+                  <Legend 
+                    layout="vertical" 
+                    verticalAlign="bottom" 
+                    align="center"
+                    wrapperStyle={{ fontSize: '12px', paddingTop: '20px' }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
