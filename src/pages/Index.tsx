@@ -22,9 +22,9 @@ const Index = () => {
     standardDeduction: 29600,
     taxableIncome: incomeData.total - 29600,
     federalTax: 17117,
-    stateTax: 5421,
-    netIncome: 124527,
-    monthlyIncome: 10377
+    stateTax: 4819,
+    netIncome: 125129,
+    monthlyIncome: 10427
   };
   const budgetData = [{
     name: "Housing",
