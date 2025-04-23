@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,16 +7,16 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 const Phase3 = () => {
   const [track, setTrack] = useState<"aggressive" | "moderate">("aggressive");
 
-  // Lake Fund data (yearly progress)
+  // Lake Fund data (yearly progress with 4.35% HYSA)
   const lakeFundData = [
-    { year: 'Year 3', aggressive: 10800, moderate: 0 },
-    { year: 'Year 4', aggressive: 22320, moderate: 3800 },
-    { year: 'Year 5', aggressive: 34622, moderate: 8008 },
-    { year: 'Year 6', aggressive: 47763, moderate: 12452 },
-    { year: 'Year 7', aggressive: 61805, moderate: 17145 },
-    { year: 'Year 8', aggressive: 76817, moderate: 22102 },
-    { year: 'Year 9', aggressive: 92870, moderate: 27338 },
-    { year: 'Year 10', aggressive: 93464, moderate: 29988 },
+    { year: 'Year 3', aggressive: 9900, moderate: 0 },
+    { year: 'Year 4', aggressive: 20231, moderate: 3731 },
+    { year: 'Year 5', aggressive: 31012, moderate: 7608 },
+    { year: 'Year 6', aggressive: 42261, moderate: 11635 },
+    { year: 'Year 7', aggressive: 53998, moderate: 15819 },
+    { year: 'Year 8', aggressive: 66242, moderate: 20165 },
+    { year: 'Year 9', aggressive: 79012, moderate: 24679 },
+    { year: 'Year 10', aggressive: 92331, moderate: 29368 },
   ];
 
   const netWorthData = [
@@ -47,7 +46,7 @@ const Phase3 = () => {
       <Card className="shadow-lg hover:shadow-xl transition-all duration-300 mb-8">
         <CardHeader>
           <CardTitle>Lake Fund Growth</CardTitle>
-          <CardDescription>Progress from initial investment to Year 10</CardDescription>
+          <CardDescription>Progress from initial investment to Year 10 in HYSA</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex justify-center items-center w-full">
@@ -88,9 +87,9 @@ const Phase3 = () => {
               <h3 className="text-xl font-semibold text-blue-600">Aggressive Track Strategy</h3>
               <ul className="list-disc list-inside space-y-1">
                 <li>$800/month contribution starting Year 3</li>
-                <li>Invested in diversified portfolio</li>
-                <li>Higher growth rate: 7.2% annual return</li>
-                <li>Final balance: $93,464</li>
+                <li>High Yield Savings Account (HYSA)</li>
+                <li>Interest rate: 4.35% APY</li>
+                <li>Final balance: $92,331</li>
               </ul>
             </div>
             
@@ -98,9 +97,9 @@ const Phase3 = () => {
               <h3 className="text-xl font-semibold text-orange-500">Moderate Track Strategy</h3>
               <ul className="list-disc list-inside space-y-1">
                 <li>$300/month contribution starting Year 4</li>
-                <li>More conservative investments</li>
-                <li>Moderate growth rate: 5.3% annual return</li>
-                <li>Final balance: $29,988</li>
+                <li>High Yield Savings Account (HYSA)</li>
+                <li>Interest rate: 4.35% APY</li>
+                <li>Final balance: $29,368</li>
               </ul>
             </div>
           </div>
