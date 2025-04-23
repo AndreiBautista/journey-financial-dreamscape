@@ -295,16 +295,10 @@ const Index = () => {
               color
             }))} totalAmount={totalMonthlyIncome} />
               <div className="mt-6 text-gray-800 text-sm">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="font-semibold">Net Monthly Income</span>
-                  <span className="font-mono">${totalMonthlyIncome.toLocaleString()}</span>
-                </div>
+                
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold">Total Allocated</span>
-                  <span className="font-mono">
-                    ${budgetItems.reduce((sum, i) => sum + i.amount, 0).toLocaleString()} 
-                    {" "}({Math.round(budgetItems.reduce((sum, i) => sum + i.amount, 0) / totalMonthlyIncome * 100)}%)
-                  </span>
+                  
+                  
                 </div>
               </div>
             </CardContent>
@@ -343,7 +337,7 @@ const Index = () => {
                       <span className="font-medium">{debt.name}</span>
                       <span>${debt.amount.toLocaleString()}</span>
                     </div>
-                    <div className="text-sm text-gray-500 mt-1">
+                    <div className="text-sm text-gray-500 mt-1 px-[24px] my-0">
                       {debt.interestRate} interest rate
                     </div>
                   </div>)}
