@@ -2,14 +2,14 @@
 import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Label, Sector } from "recharts";
 
-interface BudgetDataItem {
+export interface BudgetItem {
   name: string;
   value: number;
   color: string;
 }
 
 interface BudgetPieChartProps {
-  data: BudgetDataItem[];
+  data: BudgetItem[];
   totalAmount: number;
 }
 
