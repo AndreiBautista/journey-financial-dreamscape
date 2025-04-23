@@ -254,7 +254,7 @@ const Phase2 = () => {
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <table className="w-full table-fixed">
+              <table className="w-full">
                 <thead>
                   <tr className="border-b">
                     <th className="text-left py-3 w-1/3">Item</th>
