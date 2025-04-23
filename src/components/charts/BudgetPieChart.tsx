@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Label, Sector } from "recharts";
 
 export interface BudgetItem {
@@ -14,34 +14,58 @@ interface BudgetPieChartProps {
 }
 
 export const BudgetPieChart: React.FC<BudgetPieChartProps> = ({ data, totalAmount }) => {
+  const [chartDimensions, setChartDimensions] = useState({ width: 0, height: 0 });
+  
+  useEffect(() => {
+    const updateDimensions = () => {
+      const container = document.querySelector('.chart-container');
+      if (container) {
+        const { width, height } = container.getBoundingClientRect();
+        setChartDimensions({ width, height });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener('resize', updateDimensions);
+    return () => window.removeEventListener('resize', updateDimensions);
+  }, []);
+
+  // Calculate dynamic dimensions based on container size
+  const calculateDimensions = useCallback(() => {
+    const minDimension = Math.min(chartDimensions.width, chartDimensions.height);
+    return {
+      innerRadius: minDimension * 0.15,
+      outerRadius: minDimension * 0.3,
+      lineLength: minDimension * 0.08,
+      labelOffset: minDimension * 0.03,
+    };
+  }, [chartDimensions]);
+
   // Custom active shape for the pie chart with label lines
   const renderLabel = (props: any) => {
     const RADIAN = Math.PI / 180;
-    const { cx, cy, midAngle, outerRadius, name, value, percent, fill } = props;
+    const { cx, cy, midAngle, name, value, percent, fill } = props;
+    const dims = calculateDimensions();
     
     // Line properties
     const sin = Math.sin(-RADIAN * midAngle);
     const cos = Math.cos(-RADIAN * midAngle);
-    const lineLength = 35; // Length of the line extending from the pie
-    const labelOffset = 15; // Extra space for the label beyond the line
     
     // Start and end points of the line
-    const sx = cx + (outerRadius + 5) * cos;
-    const sy = cy + (outerRadius + 5) * sin;
-    const ex = cx + (outerRadius + lineLength) * cos;
-    const ey = cy + (outerRadius + lineLength) * sin;
+    const sx = cx + (dims.outerRadius + 5) * cos;
+    const sy = cy + (dims.outerRadius + 5) * sin;
+    const ex = cx + (dims.outerRadius + dims.lineLength) * cos;
+    const ey = cy + (dims.outerRadius + dims.lineLength) * sin;
     
     // Text position
-    const tx = ex + (cos >= 0 ? 1 : -1) * labelOffset;
+    const tx = ex + (cos >= 0 ? 1 : -1) * dims.labelOffset;
     const ty = ey;
     
     // Text anchor based on which side of the pie we're on
     const textAnchor = cos >= 0 ? 'start' : 'end';
     
-    // Format the percentage
+    // Format the percentage and value
     const percentFormatted = (percent * 100).toFixed(0);
-    
-    // Format the value as currency
     const valueFormatted = value.toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
@@ -49,34 +73,31 @@ export const BudgetPieChart: React.FC<BudgetPieChartProps> = ({ data, totalAmoun
       maximumFractionDigits: 0
     });
     
+    // Calculate font sizes based on container dimensions
+    const nameFontSize = Math.max(chartDimensions.width * 0.02, 10);
+    const valueFontSize = Math.max(chartDimensions.width * 0.015, 9);
+    
     return (
       <g>
-        {/* Line extending from the pie */}
         <line x1={sx} y1={sy} x2={ex} y2={ey} stroke={fill} strokeWidth={2} />
-        
-        {/* Dot at the end of the line */}
         <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-        
-        {/* Category name */}
         <text 
           x={tx} 
           y={ty} 
           textAnchor={textAnchor} 
           fill={fill} 
-          fontSize={12} 
+          fontSize={nameFontSize}
           fontWeight="bold"
           dominantBaseline="middle"
         >
           {name}
         </text>
-        
-        {/* Value and percentage */}
         <text 
           x={tx} 
-          y={ty + 16} 
+          y={ty + nameFontSize + 2} 
           textAnchor={textAnchor} 
           fill="#666"
-          fontSize={11}
+          fontSize={valueFontSize}
           dominantBaseline="middle"
         >
           {valueFormatted} ({percentFormatted}%)
@@ -85,16 +106,18 @@ export const BudgetPieChart: React.FC<BudgetPieChartProps> = ({ data, totalAmoun
     );
   };
 
+  const dims = calculateDimensions();
+
   return (
-    <div className="w-full h-full chart-container hover:scale-105 transition-transform duration-300">
+    <div className="w-full h-full chart-container">
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart className="w-full h-full">
+        <PieChart>
           <Pie
             data={data}
             cx="50%"
             cy="50%"
-            innerRadius={70}
-            outerRadius={140}
+            innerRadius={dims.innerRadius}
+            outerRadius={dims.outerRadius}
             fill="#8884d8"
             dataKey="value"
             label={renderLabel}
