@@ -38,7 +38,7 @@ const InsuranceOptimization = () => {
   
   // Life Insurance
   const [katieLifeInsurance, setKatieLifeInsurance] = useState(80000);
-  const [chadLifeInsurance, setChadLifeInsurance] = useState();
+  const [chadLifeInsurance, setChadLifeInsurance] = useState(0); // Fixed undefined to 0
   const [recommendedLifeInsurance, setRecommendedLifeInsurance] = useState(0);
   
   // Boat Insurance
@@ -50,6 +50,11 @@ const InsuranceOptimization = () => {
   const [hasUmbrellaPolicy, setHasUmbrellaPolicy] = useState(false);
   const [umbrellaPremium, setUmbrellaPremium] = useState(0);
   const [umbrellaRecommended, setUmbrellaRecommended] = useState(false);
+  
+  // Insurance Bundling
+  const [hasBundle, setHasBundle] = useState(false);
+  const [bundleDiscount, setBundleDiscount] = useState(0.12); // 12% discount rate
+  const [bundleSavings, setBundleSavings] = useState(0);
   
   // Total net worth (simplified calculation)
   const [netWorth, setNetWorth] = useState(50000);
@@ -68,8 +73,21 @@ const InsuranceOptimization = () => {
   // Calculate potential home insurance savings
   const homeSavings = lowDeductible ? (currentHomePremium - higherHomePremium) : 0;
   
+  // Calculate bundle savings
+  useEffect(() => {
+    if (hasBundle) {
+      const totalPremium = lowDeductible ? 
+        (currentAutoPremium + currentHomePremium) : 
+        (higherAutoPremium + higherHomePremium);
+      const savings = Math.round(totalPremium * bundleDiscount);
+      setBundleSavings(savings);
+    } else {
+      setBundleSavings(0);
+    }
+  }, [hasBundle, lowDeductible, currentAutoPremium, currentHomePremium, higherAutoPremium, higherHomePremium, bundleDiscount]);
+  
   // Calculate total potential savings
-  const totalAnnualSavings = autoSavings + homeSavings;
+  const totalAnnualSavings = autoSavings + homeSavings + bundleSavings;
   
   // Update recommended life insurance (5x salary)
   useEffect(() => {
@@ -114,6 +132,10 @@ const InsuranceOptimization = () => {
       recommendations.push("Consider opening an HSA account for tax advantages on medical expenses.");
     }
     
+    if (!hasBundle) {
+      recommendations.push(`Bundle your home and auto insurance to save approximately $${Math.round((currentAutoPremium + currentHomePremium) * bundleDiscount).toLocaleString()} annually.`);
+    }
+    
     setInsuranceRecommendations(recommendations);
   }, [
     hasBoatInsurance,
@@ -125,7 +147,11 @@ const InsuranceOptimization = () => {
     umbrellaRecommended,
     hasUmbrellaPolicy,
     hasHSA,
-    healthDeductible
+    healthDeductible,
+    hasBundle,
+    currentAutoPremium,
+    currentHomePremium,
+    bundleDiscount
   ]);
   
   // Update boat insurance premium
@@ -167,6 +193,11 @@ const InsuranceOptimization = () => {
     // Raise deductibles if emergency fund allows
     if (readyForHigherDeductibles && lowDeductible) {
       setLowDeductible(false);
+    }
+    
+    // Bundle insurance if not already bundled
+    if (!hasBundle) {
+      setHasBundle(true);
     }
   };
 
@@ -637,6 +668,56 @@ const InsuranceOptimization = () => {
                         </AlertDescription>
                       </Alert>
                     )
+                  )}
+                </div>
+                
+                {/* Insurance Bundling Section */}
+                <div className="space-y-4 pt-4 border-t">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-medium">Bundle Home & Auto</h3>
+                      <p className="text-sm text-muted-foreground">Save with multi-policy discount</p>
+                    </div>
+                    <Switch
+                      id="bundleInsurance"
+                      checked={hasBundle}
+                      onCheckedChange={setHasBundle}
+                    />
+                  </div>
+                  
+                  {hasBundle ? (
+                    <div>
+                      <div className="flex justify-between py-2 px-3 bg-blue-50 rounded-md">
+                        <span className="font-medium">Bundle Discount Rate:</span>
+                        <span>{Math.round(bundleDiscount * 100)}%</span>
+                      </div>
+                      
+                      <div className="flex justify-between py-2 px-3 bg-green-50 rounded-md mt-2">
+                        <span className="font-medium">Annual Savings:</span>
+                        <span className="text-green-600 font-semibold">${bundleSavings.toLocaleString()}</span>
+                      </div>
+                      
+                      <div className="mt-3">
+                        <Label htmlFor="bundleDiscountRate">Discount Rate (%)</Label>
+                        <Input
+                          id="bundleDiscountRate"
+                          type="number"
+                          min="0"
+                          max="30"
+                          value={Math.round(bundleDiscount * 100)}
+                          onChange={(e) => setBundleDiscount(Number(e.target.value) / 100)}
+                        />
+                        <span className="text-xs text-muted-foreground">Typical range: 5-15%</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <Alert className="bg-blue-50 border-blue-200">
+                      <InfoIcon className="h-4 w-4 text-blue-500" />
+                      <AlertTitle>Bundle Opportunity</AlertTitle>
+                      <AlertDescription>
+                        Bundling your home and auto insurance could save you approximately ${Math.round((currentAutoPremium + currentHomePremium) * bundleDiscount).toLocaleString()} per year.
+                      </AlertDescription>
+                    </Alert>
                   )}
                 </div>
               </CardContent>

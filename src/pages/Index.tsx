@@ -9,8 +9,10 @@ import { ChevronRight } from "lucide-react";
 import { BudgetPieChart } from "@/components/charts/BudgetPieChart";
 import { NetWorthChart } from "@/components/charts/NetWorthChart";
 import { MilestoneTracker, Milestone } from "@/components/MilestoneTracker";
+
 const Index = () => {
   const [track, setTrack] = useState<"aggressive" | "moderate">("aggressive");
+  
   const incomeData = {
     katie: 80000,
     chad: 73265,
@@ -215,6 +217,7 @@ const Index = () => {
     amount: 15000,
     interestRate: "Average"
   }];
+
   return <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-blue-600 mb-2">Chad & Katie's Financial Journey</h1>
       <p className="text-gray-600 mb-8">Interactive financial planning and tracking dashboard</p>
@@ -329,9 +332,7 @@ const Index = () => {
               <CardDescription>Total debt: ${totalDebt.toLocaleString()}</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 p-6 pt-0">
-              <div className="space-y-4 overflow-y-auto scroll-blue" style={{
-              maxHeight: 350
-            }}>
+              <div className="space-y-4 overflow-y-auto scroll-blue max-h-[350px]">
                 {debtData.map((debt, index) => <div key={index} className="border-b pb-3 last:border-b-0 last:pb-0">
                     <div className="flex justify-between">
                       <span className="font-medium">{debt.name}</span>
@@ -342,7 +343,7 @@ const Index = () => {
                     </div>
                   </div>)}
               </div>
-              <div className="flex justify-end mt-4 my-0">
+              <div className="flex justify-end mt-4">
                 <Link to="/phase1">
                   <Button variant="outline" className="text-blue-600 hover:text-blue-700">
                     Debt Management <ChevronRight className="ml-1 h-4 w-4" />
@@ -401,4 +402,5 @@ const Index = () => {
       `}</style>
     </div>;
 };
+
 export default Index;

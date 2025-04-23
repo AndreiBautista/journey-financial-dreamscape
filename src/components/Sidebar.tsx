@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ChevronRight, Calculator, PiggyBank, Home, TrendingUp, Wallet, Menu, ArrowRight } from "lucide-react";
+import { ChevronRight, Calculator, PiggyBank, Home, TrendingUp, Wallet, Menu, ArrowRight, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -28,7 +28,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile }) => {
     { path: "/phase1", label: "Phase 1: Stabilization", icon: <Wallet className="w-5 h-5" /> },
     { path: "/phase2", label: "Phase 2: Family & Growth", icon: <PiggyBank className="w-5 h-5" /> },
     { path: "/phase3", label: "Phase 3: Lake & Wealth", icon: <TrendingUp className="w-5 h-5" /> },
-    { path: "/calculator", label: "Compound Calculator", icon: <Calculator className="w-5 h-5" /> }
+    { path: "/calculator", label: "Compound Calculator", icon: <Calculator className="w-5 h-5" /> },
+    { path: "/assumptions", label: "Assumptions", icon: <Settings className="w-5 h-5" /> }
   ];
 
   return (
