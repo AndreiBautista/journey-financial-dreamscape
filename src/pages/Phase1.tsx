@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -146,6 +147,47 @@ const Phase1 = () => {
       </g>
     );
   };
+
+  // New useEffect to sync premium values on page load
+  useEffect(() => {
+    // Function to sync values from the insurance component
+    const syncInsuranceValues = () => {
+      // Wait a short amount of time for the component to fully render
+      setTimeout(() => {
+        const autoInsuranceElement = document.getElementById('currentPremium') as HTMLInputElement;
+        const homeInsuranceElement = document.getElementById('currentHomePremium') as HTMLInputElement;
+        
+        if (autoInsuranceElement) {
+          const autoValue = Number(autoInsuranceElement.value) || 0;
+          setCurrentAutoPremium(autoValue);
+        }
+        
+        if (homeInsuranceElement) {
+          const homeValue = Number(homeInsuranceElement.value) || 0;
+          setCurrentHomePremium(homeValue);
+        }
+      }, 300);
+    };
+    
+    // Initial sync on component mount
+    syncInsuranceValues();
+    
+    // Add event listener for tab changes to ensure values are synced when switching tabs
+    const tabElements = document.querySelectorAll('[role="tab"]');
+    const handleTabChange = () => {
+      syncInsuranceValues();
+    };
+    
+    tabElements.forEach(tab => {
+      tab.addEventListener('click', handleTabChange);
+    });
+    
+    return () => {
+      tabElements.forEach(tab => {
+        tab.removeEventListener('click', handleTabChange);
+      });
+    };
+  }, []);
 
   useEffect(() => {
     const updatePremiumValues = () => {
