@@ -332,16 +332,17 @@ const Index = () => {
               <CardDescription>Total debt: ${totalDebt.toLocaleString()}</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 p-6 pt-0">
-              <div className="space-y-4 overflow-y-auto scroll-blue max-h-[350px]">
-                {debtData.map((debt, index) => <div key={index} className="border-b pb-3 last:border-b-0 last:pb-0">
-                    <div className="flex justify-between">
+              <div className="space-y-2 overflow-y-auto scroll-blue max-h-[350px]">
+                {debtData.map((debt, index) => (
+                  <div key={index} className="border-b pb-2 last:border-b-0 last:pb-0 flex justify-between items-center">
+                    <div>
                       <span className="font-medium">{debt.name}</span>
-                      <span>${debt.amount.toLocaleString()}</span>
+                      <div className="text-sm text-gray-500 mt-1">
+                        ${debt.amount.toLocaleString()} | {debt.interestRate} interest rate
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-500 mt-1 px-[24px] my-0">
-                      {debt.interestRate} interest rate
-                    </div>
-                  </div>)}
+                  </div>
+                ))}
               </div>
               <div className="flex justify-end mt-4">
                 <Link to="/phase1">
