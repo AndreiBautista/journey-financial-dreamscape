@@ -1,11 +1,24 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
 
 const Phase3 = () => {
   const [track, setTrack] = useState<"aggressive" | "moderate">("aggressive");
+
+  // Lake Fund data (yearly progress)
+  const lakeFundData = [
+    { year: 'Year 3', aggressive: 10800, moderate: 0 },
+    { year: 'Year 4', aggressive: 22320, moderate: 3800 },
+    { year: 'Year 5', aggressive: 34622, moderate: 8008 },
+    { year: 'Year 6', aggressive: 47763, moderate: 12452 },
+    { year: 'Year 7', aggressive: 61805, moderate: 17145 },
+    { year: 'Year 8', aggressive: 76817, moderate: 22102 },
+    { year: 'Year 9', aggressive: 92870, moderate: 27338 },
+    { year: 'Year 10', aggressive: 93464, moderate: 29988 },
+  ];
 
   const netWorthData = [
     { category: "Retirement", aggressive: 251892, moderate: 122035 },
@@ -29,6 +42,71 @@ const Phase3 = () => {
 
   return (
     <div className="container mx-auto py-8 px-4">
+      <h2 className="text-2xl font-bold text-blue-600 mb-6">Lake Fund Growth (Years 3-10)</h2>
+      
+      <Card className="shadow-lg hover:shadow-xl transition-all duration-300 mb-8">
+        <CardHeader>
+          <CardTitle>Lake Fund Growth</CardTitle>
+          <CardDescription>Progress from initial investment to Year 10</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center items-center w-full">
+            <div className="h-96 w-full max-w-4xl">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={lakeFundData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 30 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="year" />
+                  <YAxis 
+                    tickFormatter={(tick) => `$${(tick / 1000).toFixed(0)}K`}
+                    label={{ value: 'Balance ($)', angle: -90, position: 'insideLeft' }}
+                  />
+                  <Tooltip 
+                    formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
+                    contentStyle={tooltipStyle}
+                  />
+                  <Legend />
+                  <Bar 
+                    dataKey="aggressive" 
+                    name="Aggressive Track" 
+                    fill="#0ea5e9" 
+                  />
+                  <Bar 
+                    dataKey="moderate" 
+                    name="Moderate Track" 
+                    fill="#f59e0b" 
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-blue-600">Aggressive Track Strategy</h3>
+              <ul className="list-disc list-inside space-y-1">
+                <li>$800/month contribution starting Year 3</li>
+                <li>Invested in diversified portfolio</li>
+                <li>Higher growth rate: 7.2% annual return</li>
+                <li>Final balance: $93,464</li>
+              </ul>
+            </div>
+            
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-orange-500">Moderate Track Strategy</h3>
+              <ul className="list-disc list-inside space-y-1">
+                <li>$300/month contribution starting Year 4</li>
+                <li>More conservative investments</li>
+                <li>Moderate growth rate: 5.3% annual return</li>
+                <li>Final balance: $29,988</li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       <h2 className="text-2xl font-bold text-blue-600 mb-6">Net Worth Summary (Year 10)</h2>
       <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
         <CardHeader>
