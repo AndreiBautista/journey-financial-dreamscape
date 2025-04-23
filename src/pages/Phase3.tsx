@@ -23,7 +23,7 @@ const Phase3 = () => {
     { category: "Retirement", aggressive: 251892, moderate: 122035 },
     { category: "529 Plan", aggressive: 30561, moderate: 30561 },
     { category: "Baby Fund", aggressive: 11767, moderate: 13660 },
-    { category: "Lake Fund", aggressive: 93464, moderate: 29988 },
+    { category: "Lake Fund", aggressive: 92331, moderate: 29368 },
   ];
 
   const totalNetWorth = {
