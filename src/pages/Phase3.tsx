@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -373,12 +374,13 @@ const Phase3 = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="h-96">
+              <div className="h-96 flex justify-center items-center"> {/* Added centering classes */}
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={netWorthData}
                     margin={{ top: 20, right: 20, left: 120, bottom: 5 }}
                     layout="vertical"
+                    className="mx-auto" // Added to ensure chart is centered
                   >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis 
@@ -460,3 +462,4 @@ const Phase3 = () => {
 };
 
 export default Phase3;
+
