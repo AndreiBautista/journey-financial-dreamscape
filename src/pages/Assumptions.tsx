@@ -9,7 +9,7 @@ const Assumptions = () => {
       content: [
         ["Person", "Current Salary", "Assumed Annual Raise", "Notes"],
         ["Katie", "$80,000", "3% per year", "Steady career growth in corporate field"],
-        ["Chad", "$73,265 (Spectrum)", "4% per year", "Commission-based; slight upside variability"],
+        ["Chad", "$73,265 (Spectrum)", "4% per year", "Entry level sales representative position in Hebron, KY from indeed.com"],
         ["Combined by Year 10", "~$210,000", "", ""]
       ]
     },
