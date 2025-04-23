@@ -15,6 +15,7 @@ interface BudgetPieChartProps {
 
 export const BudgetPieChart: React.FC<BudgetPieChartProps> = ({ data, totalAmount }) => {
   const [chartDimensions, setChartDimensions] = useState({ width: 0, height: 0 });
+  const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
   
   useEffect(() => {
     const updateDimensions = () => {
@@ -25,8 +26,23 @@ export const BudgetPieChart: React.FC<BudgetPieChartProps> = ({ data, totalAmoun
       }
     };
 
+    // Initial update
     updateDimensions();
+    
+    // Update on resize
     window.addEventListener('resize', updateDimensions);
+    
+    // Observe container size changes with ResizeObserver if supported
+    const container = document.querySelector('.chart-container');
+    if (container && window.ResizeObserver) {
+      const resizeObserver = new ResizeObserver(updateDimensions);
+      resizeObserver.observe(container);
+      return () => {
+        resizeObserver.disconnect();
+        window.removeEventListener('resize', updateDimensions);
+      };
+    }
+    
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
@@ -40,6 +56,15 @@ export const BudgetPieChart: React.FC<BudgetPieChartProps> = ({ data, totalAmoun
       labelOffset: minDimension * 0.03,
     };
   }, [chartDimensions]);
+
+  // Handle pie chart hover interactions
+  const onPieEnter = (_: any, index: number) => {
+    setActiveIndex(index);
+  };
+  
+  const onPieLeave = () => {
+    setActiveIndex(undefined);
+  };
 
   // Custom active shape for the pie chart with label lines
   const renderLabel = (props: any) => {
@@ -105,6 +130,27 @@ export const BudgetPieChart: React.FC<BudgetPieChartProps> = ({ data, totalAmoun
       </g>
     );
   };
+  
+  // Custom active shape for highlighting
+  const renderActiveShape = (props: any) => {
+    const RADIAN = Math.PI / 180;
+    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
+    
+    return (
+      <g>
+        <Sector
+          cx={cx}
+          cy={cy}
+          innerRadius={innerRadius}
+          outerRadius={outerRadius + 6}
+          startAngle={startAngle}
+          endAngle={endAngle}
+          fill={fill}
+          opacity={0.9}
+        />
+      </g>
+    );
+  };
 
   const dims = calculateDimensions();
 
@@ -124,6 +170,10 @@ export const BudgetPieChart: React.FC<BudgetPieChartProps> = ({ data, totalAmoun
             labelLine={false}
             paddingAngle={2}
             isAnimationActive={true}
+            activeIndex={activeIndex}
+            activeShape={renderActiveShape}
+            onMouseEnter={onPieEnter}
+            onMouseLeave={onPieLeave}
           >
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.color} className="hover:opacity-80 transition-opacity" />

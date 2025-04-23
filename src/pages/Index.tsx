@@ -12,6 +12,7 @@ import { MilestoneTracker, Milestone } from "@/components/MilestoneTracker";
 
 const Index = () => {
   const [track, setTrack] = useState<"aggressive" | "moderate">("aggressive");
+  const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
   
   const incomeData = {
     katie: 80000,
@@ -217,6 +218,14 @@ const Index = () => {
     amount: 15000,
     interestRate: "Average"
   }];
+
+  const onPieEnter = (_: any, index: number) => {
+    setActiveIndex(index);
+  };
+
+  const onPieLeave = () => {
+    setActiveIndex(undefined);
+  };
 
   const renderActiveShape = (props: any) => {
     const RADIAN = Math.PI / 180;
