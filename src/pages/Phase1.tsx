@@ -143,12 +143,18 @@ const Phase1 = () => {
     );
   };
 
-  const home = budgetItems.find(i => i.category.toLowerCase().includes("home"))?.amount ?? 0;
-  const auto = budgetItems.find(i => i.category.toLowerCase().includes("auto") || i.category.toLowerCase().includes("transport"))?.amount ?? 0;
-  const insurance = budgetItems.find(i => i.category.toLowerCase().includes("insurance"))?.amount ?? 0;
-  const estimatedPremium = Math.max(home + auto, insurance);
-  const bundleSavings = estimatedPremium * 0.12;
-  const bundledTotal = estimatedPremium - bundleSavings;
+  const getInsuranceAnnual = (label: string) => {
+    const cat = budgetItems.find(item => item.category.toLowerCase().includes(label.toLowerCase()));
+    if (!cat) return 0;
+    return cat.amount * 12;
+  };
+
+  const homeAnnual = getInsuranceAnnual('home insurance');
+  const autoAnnual = getInsuranceAnnual('auto insurance');
+  const totalInsuranceAnnual = homeAnnual + autoAnnual;
+  const totalInsuranceMonthly = totalInsuranceAnnual / 12;
+  const insuranceBundleSavings = totalInsuranceMonthly * 0.12;
+  const insuranceBundledTotal = totalInsuranceMonthly - insuranceBundleSavings;
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -340,39 +346,65 @@ const Phase1 = () => {
       </Tabs>
 
       <div className="mt-12">
-        <h2 className="text-2xl font-bold text-blue-600 mb-6">Tax Optimization</h2>
-        <TaxOptimization />
+        <Card className="bg-yellow-50/80 border-yellow-300 mb-10 max-w-xl mx-auto">
+          <CardHeader>
+            <CardTitle className="text-yellow-700 text-base flex items-center">Emergency Fund Status</CardTitle>
+            <CardDescription>Your safety net for higher deductibles</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col items-start gap-2 mb-2">
+              <div className="font-medium">Emergency Fund</div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xl font-bold text-yellow-900">${track === "aggressive" ? 4000 : 2000} / ${track === "aggressive" ? 10000 : 5000}</span>
+              </div>
+              <div>
+                <div className="flex flex-col gap-1">
+                  <span>
+                    <span className="font-medium">Current Amount</span>: ${track === "aggressive" ? 4000 : 2000}
+                  </span>
+                  <span>
+                    <span className="font-medium">Target Amount</span>: ${track === "aggressive" ? 10000 : 5000}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <Progress value={track === "aggressive" ? (4000 / 10000) * 100 : (2000 / 5000) * 100} className="h-2 mb-2" />
+            <div className="mt-2 text-sm text-gray-700">
+              Continue building your emergency fund to ${track === "aggressive" ? "10,000" : "5,000"} before raising insurance deductibles.
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="mt-12">
         <h2 className="text-2xl font-bold text-blue-600 mb-6">Insurance Optimization</h2>
 
         <div className="mb-6">
-          <Card className="bg-blue-50/40 border-blue-200">
+          <Card className="bg-blue-50/40 border-blue-200 max-w-xl mx-auto">
             <CardHeader>
               <CardTitle className="text-blue-700 text-base flex items-center">
                 Bundle Home &amp; Auto Insurance
               </CardTitle>
-              <CardDescription>Estimate your monthly bundled insurance premium</CardDescription>
+              <CardDescription>Estimate your monthly bundled insurance premium using your budgeted values below</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col md:flex-row items-center gap-4 text-blue-800">
+              <div className="flex flex-col sm:flex-row flex-wrap items-center gap-4 text-blue-800">
                 <div>
                   <span className="font-semibold">Current Insurance Premium:</span>{" "}
-                  <span className="font-mono">${estimatedPremium.toLocaleString()}</span>
+                  <span className="font-mono">${totalInsuranceMonthly.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
                   <span className="ml-2 text-xs">/mo</span>
                 </div>
                 <div>
                   <span className="font-semibold">Bundled Estimate (12% off):</span>{" "}
-                  <span className="font-mono">${bundledTotal.toLocaleString(undefined, {maximumFractionDigits:0})}</span>
+                  <span className="font-mono">${insuranceBundledTotal.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
                   <span className="ml-2 text-xs">/mo</span>
                 </div>
                 <div>
                   <span className="font-semibold text-green-600">Estimated Monthly Savings:</span>{" "}
-                  <span className="font-mono text-green-700">-${bundleSavings.toLocaleString(undefined, {maximumFractionDigits:0})}</span>
+                  <span className="font-mono text-green-700">-${insuranceBundleSavings.toLocaleString(undefined, {maximumFractionDigits:0})}</span>
                 </div>
               </div>
-              <div className="text-xs text-gray-400 mt-2">*Estimate based on budgeted premium(s) above; real quotes may differ.</div>
+              <div className="text-xs text-gray-400 mt-2">*Estimate based on your Home/Auto budget rows above; real quotes may differ.</div>
             </CardContent>
           </Card>
         </div>
