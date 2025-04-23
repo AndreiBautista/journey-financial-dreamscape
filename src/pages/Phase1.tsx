@@ -144,7 +144,7 @@ const Phase1 = () => {
   };
 
   const home = budgetItems.find(i => i.category.toLowerCase().includes("home"))?.amount ?? 0;
-  const auto = budgetItems.find(i => i.category.toLowerCase().includes("auto"))?.amount ?? 0;
+  const auto = budgetItems.find(i => i.category.toLowerCase().includes("auto") || i.category.toLowerCase().includes("transport"))?.amount ?? 0;
   const insurance = budgetItems.find(i => i.category.toLowerCase().includes("insurance"))?.amount ?? 0;
   const estimatedPremium = Math.max(home + auto, insurance);
   const bundleSavings = estimatedPremium * 0.12;

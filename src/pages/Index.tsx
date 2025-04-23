@@ -41,6 +41,7 @@ const Index = () => {
   ];
 
   const totalMonthlyIncome = taxData.monthlyIncome;
+
   const budgetItems = budgetData.map((d, i) => ({
     id: String(i + 1),
     category: d.name,
@@ -248,8 +249,8 @@ const Index = () => {
               <CardTitle>Debt Overview</CardTitle>
               <CardDescription>Total debt: ${totalDebt.toLocaleString()}</CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 debt-scroll-area p-6 pt-0">
-              <div className="space-y-4">
+            <CardContent className="flex-1 p-6 pt-0">
+              <div className="space-y-4 overflow-y-auto scroll-blue" style={{ maxHeight: 350 }}>
                 {debtData.map((debt, index) => (
                   <div key={index} className="border-b pb-3 last:border-b-0 last:pb-0">
                     <div className="flex justify-between">
@@ -305,6 +306,20 @@ const Index = () => {
           </Button>
         </Link>
       </div>
+      <style>{`
+        .scroll-blue::-webkit-scrollbar {
+          width: 8px;
+          background: #e0eaff;
+        }
+        .scroll-blue::-webkit-scrollbar-thumb {
+          background: #3b82f6;
+          border-radius: 8px;
+        }
+        .scroll-blue {
+          scrollbar-width: thin;
+          scrollbar-color: #3b82f6 #e0eaff;
+        }
+      `}</style>
     </div>
   );
 };
