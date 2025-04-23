@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -44,9 +43,9 @@ const Phase1 = () => {
   const [newAmount, setNewAmount] = useState(0);
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
-  const [currentAutoPremium, setCurrentAutoPremium] = useState(1200); // Annual auto premium
-  const [currentHomePremium, setCurrentHomePremium] = useState(1500); // Annual home premium
-  const [bundleDiscount, setBundleDiscount] = useState(0.12); // Bundle discount rate
+  const [currentAutoPremium, setCurrentAutoPremium] = useState(1200);
+  const [currentHomePremium, setCurrentHomePremium] = useState(3564);
+  const [bundleDiscount, setBundleDiscount] = useState(0.12);
 
   const totalBudget = budgetItems.reduce((sum, item) => sum + item.amount, 0);
   const unallocatedAmount = netMonthlyIncome - totalBudget;
@@ -148,11 +147,8 @@ const Phase1 = () => {
     );
   };
 
-  // New useEffect to sync premium values on page load
   useEffect(() => {
-    // Function to sync values from the insurance component
     const syncInsuranceValues = () => {
-      // Wait a short amount of time for the component to fully render
       setTimeout(() => {
         const autoInsuranceElement = document.getElementById('currentPremium') as HTMLInputElement;
         const homeInsuranceElement = document.getElementById('currentHomePremium') as HTMLInputElement;
@@ -169,10 +165,8 @@ const Phase1 = () => {
       }, 300);
     };
     
-    // Initial sync on component mount
     syncInsuranceValues();
     
-    // Add event listener for tab changes to ensure values are synced when switching tabs
     const tabElements = document.querySelectorAll('[role="tab"]');
     const handleTabChange = () => {
       syncInsuranceValues();
