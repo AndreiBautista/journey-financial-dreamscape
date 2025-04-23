@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -42,6 +43,11 @@ const Phase1 = () => {
   const [newCategory, setNewCategory] = useState("");
   const [newAmount, setNewAmount] = useState(0);
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
+
+  // Insurance bundle calculation
+  const [currentAutoPremium, setCurrentAutoPremium] = useState(1200); // Annual auto premium
+  const [currentHomePremium, setCurrentHomePremium] = useState(1500); // Annual home premium
+  const [bundleDiscount, setBundleDiscount] = useState(0.12); // Bundle discount rate
 
   const totalBudget = budgetItems.reduce((sum, item) => sum + item.amount, 0);
   const unallocatedAmount = netMonthlyIncome - totalBudget;
@@ -143,17 +149,7 @@ const Phase1 = () => {
     );
   };
 
-  const home = budgetItems.find(i => i.category.toLowerCase().includes("home"))?.amount ?? 0;
-  const auto = budgetItems.find(i => i.category.toLowerCase().includes("auto") || i.category.toLowerCase().includes("transport"))?.amount ?? 0;
-  const insurance = budgetItems.find(i => i.category.toLowerCase().includes("insurance"))?.amount ?? 0;
-  const estimatedPremium = Math.max(home + auto, insurance);
-  const bundleSavings = estimatedPremium * 0.12;
-  const bundledTotal = estimatedPremium - bundleSavings;
-
-  const currentAutoPremium = 1200; // Example annual auto premium
-  const currentHomePremium = 1500; // Example annual home premium
-  const bundleDiscount = 0.12; // Example bundle discount
-
+  // Calculate monthly premiums
   const monthlyAutoPremium = currentAutoPremium / 12;
   const monthlyHomePremium = currentHomePremium / 12;
   const totalMonthlyPremium = monthlyAutoPremium + monthlyHomePremium;
@@ -366,6 +362,40 @@ const Phase1 = () => {
               <CardDescription>Estimate your monthly bundled insurance premium</CardDescription>
             </CardHeader>
             <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div>
+                  <Label htmlFor="autoPremium">Annual Auto Insurance Premium</Label>
+                  <Input
+                    id="autoPremium"
+                    type="number"
+                    value={currentAutoPremium}
+                    onChange={(e) => setCurrentAutoPremium(Number(e.target.value))}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="homePremium">Annual Home Insurance Premium</Label>
+                  <Input
+                    id="homePremium"
+                    type="number"
+                    value={currentHomePremium}
+                    onChange={(e) => setCurrentHomePremium(Number(e.target.value))}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="bundleDiscount">Bundle Discount %</Label>
+                  <Input
+                    id="bundleDiscount"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={Math.round(bundleDiscount * 100)}
+                    onChange={(e) => setBundleDiscount(Number(e.target.value) / 100)}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
               <div className="flex flex-col md:flex-row items-center gap-4 text-blue-800">
                 <div>
                   <span className="font-semibold">Current Insurance Premium:</span>{" "}
@@ -373,7 +403,7 @@ const Phase1 = () => {
                   <span className="ml-2 text-xs">/mo</span>
                 </div>
                 <div>
-                  <span className="font-semibold">Bundled Estimate (12% off):</span>{" "}
+                  <span className="font-semibold">Bundled Estimate ({Math.round(bundleDiscount * 100)}% off):</span>{" "}
                   <span className="font-mono">${bundledMonthlyTotal.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
                   <span className="ml-2 text-xs">/mo</span>
                 </div>
