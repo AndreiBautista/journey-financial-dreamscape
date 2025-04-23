@@ -103,18 +103,12 @@ const Phase1 = () => {
   const renderActiveShape = (props: any) => {
     const RADIAN = Math.PI / 180;
     const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
-    
-    const container = document.querySelector('.chart-container-phase1');
-    const containerWidth = container?.getBoundingClientRect().width || 500;
-    const fontSize = Math.max(containerWidth * 0.02, 10);
-    
     const sin = Math.sin(-RADIAN * midAngle);
     const cos = Math.cos(-RADIAN * midAngle);
-    const lineLength = outerRadius * 0.5;
     const sx = cx + (outerRadius + 10) * cos;
     const sy = cy + (outerRadius + 10) * sin;
-    const mx = cx + (outerRadius + lineLength) * cos;
-    const my = cy + (outerRadius + lineLength) * sin;
+    const mx = cx + (outerRadius + 30) * cos;
+    const my = cy + (outerRadius + 30) * sin;
     const ex = mx + (cos >= 0 ? 1 : -1) * 22;
     const ey = my;
     const textAnchor = cos >= 0 ? 'start' : 'end';
@@ -547,45 +541,43 @@ const Phase1 = () => {
               <CardDescription>Monthly spending breakdown</CardDescription>
             </CardHeader>
             <CardContent className="h-[500px]">
-              <div className="w-full h-full chart-container-phase1">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      activeIndex={activeIndex}
-                      activeShape={renderActiveShape}
-                      data={budgetItems}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius="20%"
-                      outerRadius="45%"
-                      fill="#8884d8"
-                      dataKey="amount"
-                      nameKey="category"
-                      onMouseEnter={onPieEnter}
-                      onMouseLeave={onPieLeave}
-                    >
-                      {budgetItems.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip 
-                      content={({ active, payload }) => {
-                        if (active && payload && payload.length) {
-                          const value = Number(payload[0].value);
-                          return (
-                            <div className="bg-white border border-gray-200 p-2 rounded-lg shadow-lg">
-                              <p className="font-medium">{payload[0].name}</p>
-                              <p className="text-blue-600">${value.toLocaleString()}</p>
-                              <p className="text-gray-500">{((value / netMonthlyIncome) * 100).toFixed(1)}%</p>
-                            </div>
-                          );
-                        }
-                        return null;
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    activeIndex={activeIndex}
+                    activeShape={renderActiveShape}
+                    data={budgetItems}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={140}
+                    fill="#8884d8"
+                    dataKey="amount"
+                    nameKey="category"
+                    onMouseEnter={onPieEnter}
+                    onMouseLeave={onPieLeave}
+                  >
+                    {budgetItems.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const value = Number(payload[0].value);
+                        return (
+                          <div className="bg-white border border-gray-200 p-2 rounded-lg shadow-lg">
+                            <p className="font-medium">{payload[0].name}</p>
+                            <p className="text-blue-600">${value.toLocaleString()}</p>
+                            <p className="text-gray-500">{((value / netMonthlyIncome) * 100).toFixed(1)}%</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </CardContent>
           </Card>
         </div>
