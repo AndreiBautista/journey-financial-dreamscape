@@ -431,7 +431,7 @@ const TaxOptimization = () => {
                       onChange={(e) => setKyTaxRate(Number(e.target.value))}
                       step={0.1}
                     />
-                    <span className="text-xs text-muted-foreground">Current Kentucky flat tax rate: 4.5%</span>
+                    <span className="text-xs text-muted-foreground">Current Kentucky flat tax rate: 4.00%</span>
                   </div>
                 </AccordionContent>
               </AccordionItem>
