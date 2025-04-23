@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -44,7 +43,6 @@ const Phase1 = () => {
   const [newAmount, setNewAmount] = useState(0);
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
-  // Insurance bundle calculation
   const [currentAutoPremium, setCurrentAutoPremium] = useState(1200); // Annual auto premium
   const [currentHomePremium, setCurrentHomePremium] = useState(1500); // Annual home premium
   const [bundleDiscount, setBundleDiscount] = useState(0.12); // Bundle discount rate
@@ -149,7 +147,18 @@ const Phase1 = () => {
     );
   };
 
-  // Calculate monthly premiums
+  useEffect(() => {
+    const autoInsuranceElement = document.getElementById('currentPremium') as HTMLInputElement;
+    const homeInsuranceElement = document.getElementById('currentHomePremium') as HTMLInputElement;
+    
+    if (autoInsuranceElement && homeInsuranceElement) {
+      const autoValue = Number(autoInsuranceElement.value) || 0;
+      const homeValue = Number(homeInsuranceElement.value) || 0;
+      setCurrentAutoPremium(autoValue);
+      setCurrentHomePremium(homeValue);
+    }
+  }, []); // Only runs once on component mount
+
   const monthlyAutoPremium = currentAutoPremium / 12;
   const monthlyHomePremium = currentHomePremium / 12;
   const totalMonthlyPremium = monthlyAutoPremium + monthlyHomePremium;
@@ -362,40 +371,44 @@ const Phase1 = () => {
               <CardDescription>Estimate your monthly bundled insurance premium</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <Label htmlFor="autoPremium">Annual Auto Insurance Premium</Label>
+                  <Label htmlFor="currentAutoPremiumReadOnly">Annual Auto Insurance Premium</Label>
                   <Input
-                    id="autoPremium"
+                    id="currentAutoPremiumReadOnly"
                     type="number"
                     value={currentAutoPremium}
-                    onChange={(e) => setCurrentAutoPremium(Number(e.target.value))}
-                    className="mt-1"
+                    readOnly
+                    className="mt-1 bg-gray-50"
                   />
+                  <span className="text-xs text-gray-500">Set in Auto Insurance tab</span>
                 </div>
                 <div>
-                  <Label htmlFor="homePremium">Annual Home Insurance Premium</Label>
+                  <Label htmlFor="currentHomePremiumReadOnly">Annual Home Insurance Premium</Label>
                   <Input
-                    id="homePremium"
+                    id="currentHomePremiumReadOnly"
                     type="number"
                     value={currentHomePremium}
-                    onChange={(e) => setCurrentHomePremium(Number(e.target.value))}
-                    className="mt-1"
+                    readOnly
+                    className="mt-1 bg-gray-50"
                   />
-                </div>
-                <div>
-                  <Label htmlFor="bundleDiscount">Bundle Discount %</Label>
-                  <Input
-                    id="bundleDiscount"
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={Math.round(bundleDiscount * 100)}
-                    onChange={(e) => setBundleDiscount(Number(e.target.value) / 100)}
-                    className="mt-1"
-                  />
+                  <span className="text-xs text-gray-500">Set in Home Insurance tab</span>
                 </div>
               </div>
+              
+              <div className="mb-4">
+                <Label htmlFor="bundleDiscount">Bundle Discount %</Label>
+                <Input
+                  id="bundleDiscount"
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={Math.round(bundleDiscount * 100)}
+                  onChange={(e) => setBundleDiscount(Number(e.target.value) / 100)}
+                  className="mt-1"
+                />
+              </div>
+
               <div className="flex flex-col md:flex-row items-center gap-4 text-blue-800">
                 <div>
                   <span className="font-semibold">Current Insurance Premium:</span>{" "}
