@@ -35,6 +35,7 @@ const Phase3 = () => {
     moderate: netWorthData.reduce((sum, item) => sum + item.moderate, 0),
   };
   
+  // Lake Fund projection data
   const generateLakeFundData = (
     startYear: number, 
     monthlyContribution: number, 
@@ -64,6 +65,7 @@ const Phase3 = () => {
   const aggressiveLakeFundData = generateLakeFundData(3, 800, 8);
   const moderateLakeFundData = generateLakeFundData(4, 300, 7);
   
+  // Retirement projection data
   const generateRetirementData = (annualContribution: number, years: number, rate: number = 8) => {
     const data = [];
     let balance = 0;
@@ -83,6 +85,7 @@ const Phase3 = () => {
   const aggressiveRetirementData = generateRetirementData(16100, 10);
   const moderateRetirementData = generateRetirementData(7800, 10);
 
+  // Enhanced tooltip style for better appearance
   const tooltipStyle = {
     backgroundColor: 'white',
     border: '1px solid #ccc',
@@ -370,45 +373,43 @@ const Phase3 = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex justify-center items-center h-96">
-                <div className="w-full max-w-[400px]">
-                  <ResponsiveContainer width="100%" height={340}>
-                    <BarChart
-                      data={netWorthData}
-                      margin={{ top: 20, right: 20, left: 20, bottom: 5 }}
-                      layout="vertical"
-                    >
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis 
-                        type="number" 
-                        tickFormatter={(tick) => `$${(tick / 1000).toFixed(0)}K`} 
-                      />
-                      <YAxis 
-                        dataKey="category" 
-                        type="category" 
-                        width={110} 
-                      />
-                      <Tooltip 
-                        formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
-                        wrapperStyle={{ zIndex: 100 }}
-                        contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
-                      />
-                      <Legend wrapperStyle={{ paddingTop: 10 }} />
-                      <Bar 
-                        dataKey="aggressive" 
-                        name="Aggressive Track" 
-                        fill="#0ea5e9" 
-                        radius={[0, 4, 4, 0]}
-                      />
-                      <Bar 
-                        dataKey="moderate" 
-                        name="Moderate Track" 
-                        fill="#f59e0b" 
-                        radius={[0, 4, 4, 0]}
-                      />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
+              <div className="h-96">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={netWorthData}
+                    margin={{ top: 20, right: 20, left: 120, bottom: 5 }}
+                    layout="vertical"
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      type="number" 
+                      tickFormatter={(tick) => `$${(tick / 1000).toFixed(0)}K`} 
+                    />
+                    <YAxis 
+                      dataKey="category" 
+                      type="category" 
+                      width={110} 
+                    />
+                    <Tooltip 
+                      formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
+                      wrapperStyle={{ zIndex: 100 }}
+                      contentStyle={{ backgroundColor: 'white', border: '1px solid #ccc', borderRadius: '4px', padding: '10px' }}
+                    />
+                    <Legend wrapperStyle={{ paddingTop: 10 }} />
+                    <Bar 
+                      dataKey="aggressive" 
+                      name="Aggressive Track" 
+                      fill="#0ea5e9" 
+                      radius={[0, 4, 4, 0]}
+                    />
+                    <Bar 
+                      dataKey="moderate" 
+                      name="Moderate Track" 
+                      fill="#f59e0b" 
+                      radius={[0, 4, 4, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
               
               <div className="space-y-6">
