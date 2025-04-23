@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import TaxOptimization from "@/components/TaxOptimization";
 import InsuranceOptimization from "@/components/InsuranceOptimization";
+
 interface BudgetItem {
   id: string;
   category: string;
@@ -20,9 +21,11 @@ interface BudgetItem {
   color: string;
   percentage: number;
 }
+
 const Phase1 = () => {
   const [track, setTrack] = useState<"aggressive" | "moderate">("aggressive");
   const [netMonthlyIncome, setNetMonthlyIncome] = useState(10725);
+  
   const initialBudgetItems: BudgetItem[] = [{
     id: "1",
     category: "Housing",
@@ -78,12 +81,15 @@ const Phase1 = () => {
     color: "#64748b",
     percentage: 10
   }];
+
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(initialBudgetItems);
   const [newCategory, setNewCategory] = useState("");
   const [newAmount, setNewAmount] = useState(0);
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
+
   const totalBudget = budgetItems.reduce((sum, item) => sum + item.amount, 0);
   const unallocatedAmount = netMonthlyIncome - totalBudget;
+
   const updatePercentages = (items: BudgetItem[]) => {
     const total = netMonthlyIncome;
     return items.map(item => ({
@@ -91,6 +97,7 @@ const Phase1 = () => {
       percentage: Math.round(item.amount / total * 100)
     }));
   };
+
   const addBudgetItem = () => {
     if (!newCategory || newAmount <= 0) return;
     const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
@@ -106,6 +113,7 @@ const Phase1 = () => {
     setNewCategory("");
     setNewAmount(0);
   };
+
   const updateBudgetItem = (id: string, amount: number) => {
     const updatedItems = budgetItems.map(item => item.id === id ? {
       ...item,
@@ -113,22 +121,28 @@ const Phase1 = () => {
     } : item);
     setBudgetItems(updatePercentages(updatedItems));
   };
+
   const removeBudgetItem = (id: string) => {
     const updatedItems = budgetItems.filter(item => item.id !== id);
     setBudgetItems(updatePercentages(updatedItems));
   };
+
   const updateNetMonthlyIncome = (value: number) => {
     setNetMonthlyIncome(value);
   };
+
   useEffect(() => {
     setBudgetItems(updatePercentages(budgetItems));
   }, [netMonthlyIncome]);
+
   const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
   };
+
   const onPieLeave = () => {
     setActiveIndex(undefined);
   };
+
   const renderActiveShape = (props: any) => {
     const RADIAN = Math.PI / 180;
     const {
@@ -164,17 +178,20 @@ const Phase1 = () => {
         </text>
       </g>;
   };
+
   const getInsuranceAnnual = (label: string) => {
     const cat = budgetItems.find(item => item.category.toLowerCase().includes(label.toLowerCase()));
     if (!cat) return 0;
     return cat.amount * 12;
   };
-  const homeAnnual = getInsuranceAnnual('home insurance');
-  const autoAnnual = getInsuranceAnnual('auto insurance');
+
+  const homeAnnual = getInsuranceAnnual('home');
+  const autoAnnual = getInsuranceAnnual('auto');
   const totalInsuranceAnnual = homeAnnual + autoAnnual;
   const totalInsuranceMonthly = totalInsuranceAnnual / 12;
   const insuranceBundleSavings = totalInsuranceMonthly * 0.12;
   const insuranceBundledTotal = totalInsuranceMonthly - insuranceBundleSavings;
+
   return <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-blue-600 mb-8">Phase 1: Stabilization (Years 1-2)</h1>
       
@@ -553,4 +570,5 @@ const Phase1 = () => {
       </div>
     </div>;
 };
+
 export default Phase1;
