@@ -13,7 +13,6 @@ import { Switch } from "@/components/ui/switch";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import TaxOptimization from "@/components/TaxOptimization";
 import InsuranceOptimization from "@/components/InsuranceOptimization";
-
 interface BudgetItem {
   id: string;
   category: string;
@@ -21,43 +20,80 @@ interface BudgetItem {
   color: string;
   percentage: number;
 }
-
 const Phase1 = () => {
   const [track, setTrack] = useState<"aggressive" | "moderate">("aggressive");
   const [netMonthlyIncome, setNetMonthlyIncome] = useState(10725);
-  
-  const initialBudgetItems: BudgetItem[] = [
-    { id: "1", category: "Housing", amount: 2500, color: "#3b82f6", percentage: 25 },
-    { id: "2", category: "Transportation", amount: 800, color: "#10b981", percentage: 8 },
-    { id: "3", category: "Food", amount: 1000, color: "#f59e0b", percentage: 10 },
-    { id: "4", category: "Insurance", amount: 800, color: "#6366f1", percentage: 5 },
-    { id: "5", category: "Utilities", amount: 400, color: "#ec4899", percentage: 4 },
-    { id: "6", category: "Debt Payments", amount: 1925, color: "#ef4444", percentage: 15 },
-    { id: "7", category: "Savings", amount: 1800, color: "#14b8a6", percentage: 18 },
-    { id: "8", category: "Entertainment", amount: 500, color: "#8b5cf6", percentage: 5 },
-    { id: "9", category: "Other (Baby + Chad's Roth IRA Included)", amount: 1000, color: "#64748b", percentage: 10 },
-  ];
-
+  const initialBudgetItems: BudgetItem[] = [{
+    id: "1",
+    category: "Housing",
+    amount: 2500,
+    color: "#3b82f6",
+    percentage: 25
+  }, {
+    id: "2",
+    category: "Transportation",
+    amount: 800,
+    color: "#10b981",
+    percentage: 8
+  }, {
+    id: "3",
+    category: "Food",
+    amount: 1000,
+    color: "#f59e0b",
+    percentage: 10
+  }, {
+    id: "4",
+    category: "Insurance",
+    amount: 800,
+    color: "#6366f1",
+    percentage: 5
+  }, {
+    id: "5",
+    category: "Utilities",
+    amount: 400,
+    color: "#ec4899",
+    percentage: 4
+  }, {
+    id: "6",
+    category: "Debt Payments",
+    amount: 1925,
+    color: "#ef4444",
+    percentage: 15
+  }, {
+    id: "7",
+    category: "Savings",
+    amount: 1800,
+    color: "#14b8a6",
+    percentage: 18
+  }, {
+    id: "8",
+    category: "Entertainment",
+    amount: 500,
+    color: "#8b5cf6",
+    percentage: 5
+  }, {
+    id: "9",
+    category: "Other (Baby + Chad's Roth IRA Included)",
+    amount: 1000,
+    color: "#64748b",
+    percentage: 10
+  }];
   const [budgetItems, setBudgetItems] = useState<BudgetItem[]>(initialBudgetItems);
   const [newCategory, setNewCategory] = useState("");
   const [newAmount, setNewAmount] = useState(0);
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
-
   const totalBudget = budgetItems.reduce((sum, item) => sum + item.amount, 0);
   const unallocatedAmount = netMonthlyIncome - totalBudget;
-
   const updatePercentages = (items: BudgetItem[]) => {
     const total = netMonthlyIncome;
     return items.map(item => ({
       ...item,
-      percentage: Math.round((item.amount / total) * 100)
+      percentage: Math.round(item.amount / total * 100)
     }));
   };
-
   const addBudgetItem = () => {
     if (!newCategory || newAmount <= 0) return;
-    
-    const randomColor = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
     const newItem: BudgetItem = {
       id: Date.now().toString(),
       category: newCategory,
@@ -65,44 +101,49 @@ const Phase1 = () => {
       color: randomColor,
       percentage: 0
     };
-    
     const updatedItems = updatePercentages([...budgetItems, newItem]);
     setBudgetItems(updatedItems);
     setNewCategory("");
     setNewAmount(0);
   };
-
   const updateBudgetItem = (id: string, amount: number) => {
-    const updatedItems = budgetItems.map(item => 
-      item.id === id ? { ...item, amount } : item
-    );
+    const updatedItems = budgetItems.map(item => item.id === id ? {
+      ...item,
+      amount
+    } : item);
     setBudgetItems(updatePercentages(updatedItems));
   };
-
   const removeBudgetItem = (id: string) => {
     const updatedItems = budgetItems.filter(item => item.id !== id);
     setBudgetItems(updatePercentages(updatedItems));
   };
-
   const updateNetMonthlyIncome = (value: number) => {
     setNetMonthlyIncome(value);
   };
-
   useEffect(() => {
     setBudgetItems(updatePercentages(budgetItems));
   }, [netMonthlyIncome]);
-
   const onPieEnter = (_: any, index: number) => {
     setActiveIndex(index);
   };
-
   const onPieLeave = () => {
     setActiveIndex(undefined);
   };
-
   const renderActiveShape = (props: any) => {
     const RADIAN = Math.PI / 180;
-    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+    const {
+      cx,
+      cy,
+      midAngle,
+      innerRadius,
+      outerRadius,
+      startAngle,
+      endAngle,
+      fill,
+      payload,
+      percent,
+      value
+    } = props;
     const sin = Math.sin(-RADIAN * midAngle);
     const cos = Math.cos(-RADIAN * midAngle);
     const sx = cx + (outerRadius + 10) * cos;
@@ -112,55 +153,32 @@ const Phase1 = () => {
     const ex = mx + (cos >= 0 ? 1 : -1) * 22;
     const ey = my;
     const textAnchor = cos >= 0 ? 'start' : 'end';
-
-    return (
-      <g>
-        <Sector
-          cx={cx}
-          cy={cy}
-          innerRadius={innerRadius}
-          outerRadius={outerRadius}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          fill={fill}
-        />
-        <Sector
-          cx={cx}
-          cy={cy}
-          startAngle={startAngle}
-          endAngle={endAngle}
-          innerRadius={outerRadius + 6}
-          outerRadius={outerRadius + 10}
-          fill={fill}
-        />
+    return <g>
+        <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius} startAngle={startAngle} endAngle={endAngle} fill={fill} />
+        <Sector cx={cx} cy={cy} startAngle={startAngle} endAngle={endAngle} innerRadius={outerRadius + 6} outerRadius={outerRadius + 10} fill={fill} />
         <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
         <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{payload.category}</text>
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
           {`$${value.toLocaleString()} (${(percent * 100).toFixed(0)}%)`}
         </text>
-      </g>
-    );
+      </g>;
   };
-
   const getInsuranceAnnual = (label: string) => {
     const cat = budgetItems.find(item => item.category.toLowerCase().includes(label.toLowerCase()));
     if (!cat) return 0;
     return cat.amount * 12;
   };
-
   const homeAnnual = getInsuranceAnnual('home insurance');
   const autoAnnual = getInsuranceAnnual('auto insurance');
   const totalInsuranceAnnual = homeAnnual + autoAnnual;
   const totalInsuranceMonthly = totalInsuranceAnnual / 12;
   const insuranceBundleSavings = totalInsuranceMonthly * 0.12;
   const insuranceBundledTotal = totalInsuranceMonthly - insuranceBundleSavings;
-
-  return (
-    <div className="container mx-auto py-8 px-4">
+  return <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-blue-600 mb-8">Phase 1: Stabilization (Years 1-2)</h1>
       
-      <Tabs defaultValue={track} onValueChange={(value) => setTrack(value as "aggressive" | "moderate")}>
+      <Tabs defaultValue={track} onValueChange={value => setTrack(value as "aggressive" | "moderate")}>
         <TabsList className="grid grid-cols-2 w-full max-w-md mx-auto mb-8">
           <TabsTrigger value="aggressive">Aggressive Track</TabsTrigger>
           <TabsTrigger value="moderate">Moderate Track</TabsTrigger>
@@ -346,34 +364,7 @@ const Phase1 = () => {
       </Tabs>
 
       <div className="mt-12">
-        <Card className="bg-yellow-50/80 border-yellow-300 mb-10 max-w-xl mx-auto">
-          <CardHeader>
-            <CardTitle className="text-yellow-700 text-base flex items-center">Emergency Fund Status</CardTitle>
-            <CardDescription>Your safety net for higher deductibles</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col items-start gap-2 mb-2">
-              <div className="font-medium">Emergency Fund</div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-xl font-bold text-yellow-900">${track === "aggressive" ? 4000 : 2000} / ${track === "aggressive" ? 10000 : 5000}</span>
-              </div>
-              <div>
-                <div className="flex flex-col gap-1">
-                  <span>
-                    <span className="font-medium">Current Amount</span>: ${track === "aggressive" ? 4000 : 2000}
-                  </span>
-                  <span>
-                    <span className="font-medium">Target Amount</span>: ${track === "aggressive" ? 10000 : 5000}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <Progress value={track === "aggressive" ? (4000 / 10000) * 100 : (2000 / 5000) * 100} className="h-2 mb-2" />
-            <div className="mt-2 text-sm text-gray-700">
-              Continue building your emergency fund to ${track === "aggressive" ? "10,000" : "5,000"} before raising insurance deductibles.
-            </div>
-          </CardContent>
-        </Card>
+        
       </div>
 
       <div className="mt-12">
@@ -391,17 +382,23 @@ const Phase1 = () => {
               <div className="flex flex-col sm:flex-row flex-wrap items-center gap-4 text-blue-800">
                 <div>
                   <span className="font-semibold">Current Insurance Premium:</span>{" "}
-                  <span className="font-mono">${totalInsuranceMonthly.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+                  <span className="font-mono">${totalInsuranceMonthly.toLocaleString(undefined, {
+                    maximumFractionDigits: 0
+                  })}</span>
                   <span className="ml-2 text-xs">/mo</span>
                 </div>
                 <div>
                   <span className="font-semibold">Bundled Estimate (12% off):</span>{" "}
-                  <span className="font-mono">${insuranceBundledTotal.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+                  <span className="font-mono">${insuranceBundledTotal.toLocaleString(undefined, {
+                    maximumFractionDigits: 0
+                  })}</span>
                   <span className="ml-2 text-xs">/mo</span>
                 </div>
                 <div>
                   <span className="font-semibold text-green-600">Estimated Monthly Savings:</span>{" "}
-                  <span className="font-mono text-green-700">-${insuranceBundleSavings.toLocaleString(undefined, {maximumFractionDigits:0})}</span>
+                  <span className="font-mono text-green-700">-${insuranceBundleSavings.toLocaleString(undefined, {
+                    maximumFractionDigits: 0
+                  })}</span>
                 </div>
               </div>
               <div className="text-xs text-gray-400 mt-2">*Estimate based on your Home/Auto budget rows above; real quotes may differ.</div>
@@ -423,13 +420,7 @@ const Phase1 = () => {
             <div className="flex items-end gap-4">
               <div className="grow">
                 <Label htmlFor="monthlyIncome">Monthly Income (After Taxes)</Label>
-                <Input
-                  id="monthlyIncome"
-                  type="number"
-                  value={netMonthlyIncome}
-                  onChange={(e) => updateNetMonthlyIncome(Number(e.target.value))}
-                  className="text-lg font-medium"
-                />
+                <Input id="monthlyIncome" type="number" value={netMonthlyIncome} onChange={e => updateNetMonthlyIncome(Number(e.target.value))} className="text-lg font-medium" />
               </div>
               <div className="text-2xl font-bold text-blue-600">
                 ${netMonthlyIncome.toLocaleString()}
@@ -457,50 +448,37 @@ const Phase1 = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {budgetItems.map((item) => (
-                        <tr key={item.id} className="border-b hover:bg-gray-50">
+                      {budgetItems.map(item => <tr key={item.id} className="border-b hover:bg-gray-50">
                           <td className="py-2">
                             <div className="flex items-center">
-                              <div 
-                                className="w-3 h-3 rounded-full mr-2" 
-                                style={{ backgroundColor: item.color }}
-                              ></div>
+                              <div className="w-3 h-3 rounded-full mr-2" style={{
+                            backgroundColor: item.color
+                          }}></div>
                               {item.category}
                             </div>
                           </td>
                           <td className="text-right py-2">
-                            <Input
-                              type="number"
-                              value={item.amount}
-                              onChange={(e) => updateBudgetItem(item.id, Number(e.target.value))}
-                              className="max-w-[120px] ml-auto"
-                            />
+                            <Input type="number" value={item.amount} onChange={e => updateBudgetItem(item.id, Number(e.target.value))} className="max-w-[120px] ml-auto" />
                           </td>
                           <td className="text-right py-2">{item.percentage}%</td>
                           <td className="text-right py-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              onClick={() => removeBudgetItem(item.id)}
-                              className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                            >
+                            <Button variant="ghost" size="sm" onClick={() => removeBudgetItem(item.id)} className="text-red-500 hover:text-red-700 hover:bg-red-50">
                               Remove
                             </Button>
                           </td>
-                        </tr>
-                      ))}
+                        </tr>)}
                     </tbody>
                     <tfoot>
                       <tr className="border-t font-bold">
                         <td className="py-2">Total Allocated</td>
                         <td className="text-right py-2">${totalBudget.toLocaleString()}</td>
-                        <td className="text-right py-2">{Math.round((totalBudget / netMonthlyIncome) * 100)}%</td>
+                        <td className="text-right py-2">{Math.round(totalBudget / netMonthlyIncome * 100)}%</td>
                         <td></td>
                       </tr>
                       <tr className={`font-bold ${unallocatedAmount < 0 ? 'text-red-500' : 'text-green-500'}`}>
                         <td className="py-2">Unallocated</td>
                         <td className="text-right py-2">${unallocatedAmount.toLocaleString()}</td>
-                        <td className="text-right py-2">{Math.round((unallocatedAmount / netMonthlyIncome) * 100)}%</td>
+                        <td className="text-right py-2">{Math.round(unallocatedAmount / netMonthlyIncome * 100)}%</td>
                         <td></td>
                       </tr>
                     </tfoot>
@@ -510,49 +488,34 @@ const Phase1 = () => {
                 <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
                   <div>
                     <Label htmlFor="category">New Category</Label>
-                    <Input
-                      id="category"
-                      value={newCategory}
-                      onChange={(e) => setNewCategory(e.target.value)}
-                      placeholder="Category name"
-                    />
+                    <Input id="category" value={newCategory} onChange={e => setNewCategory(e.target.value)} placeholder="Category name" />
                   </div>
                   <div>
                     <Label htmlFor="amount">Amount</Label>
-                    <Input
-                      id="amount"
-                      type="number"
-                      value={newAmount || ''}
-                      onChange={(e) => setNewAmount(Number(e.target.value))}
-                      placeholder="0"
-                    />
+                    <Input id="amount" type="number" value={newAmount || ''} onChange={e => setNewAmount(Number(e.target.value))} placeholder="0" />
                   </div>
                   <Button onClick={addBudgetItem} className="bg-blue-600 hover:bg-blue-700">
                     Add Category
                   </Button>
                 </div>
 
-                {unallocatedAmount < 0 && (
-                  <Alert variant="destructive" className="mt-6">
+                {unallocatedAmount < 0 && <Alert variant="destructive" className="mt-6">
                     <InfoIcon className="h-4 w-4" />
                     <AlertTitle>Budget Overallocated</AlertTitle>
                     <AlertDescription>
                       Your expenses exceed your income by ${Math.abs(unallocatedAmount).toLocaleString()}. 
                       Consider reducing some categories or increasing your income.
                     </AlertDescription>
-                  </Alert>
-                )}
+                  </Alert>}
 
-                {unallocatedAmount > 0 && (
-                  <Alert className="mt-6 border-green-500">
+                {unallocatedAmount > 0 && <Alert className="mt-6 border-green-500">
                     <InfoIcon className="h-4 w-4 text-green-500" />
                     <AlertTitle className="text-green-600">Unallocated Funds</AlertTitle>
                     <AlertDescription>
                       You have ${unallocatedAmount.toLocaleString()} unallocated. Consider adding to savings, 
                       investments, or debt repayment.
                     </AlertDescription>
-                  </Alert>
-                )}
+                  </Alert>}
               </CardContent>
             </Card>
           </div>
@@ -565,47 +528,29 @@ const Phase1 = () => {
             <CardContent className="h-[500px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie
-                    activeIndex={activeIndex}
-                    activeShape={renderActiveShape}
-                    data={budgetItems}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={140}
-                    fill="#8884d8"
-                    dataKey="amount"
-                    nameKey="category"
-                    onMouseEnter={onPieEnter}
-                    onMouseLeave={onPieLeave}
-                  >
-                    {budgetItems.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
+                  <Pie activeIndex={activeIndex} activeShape={renderActiveShape} data={budgetItems} cx="50%" cy="50%" innerRadius={60} outerRadius={140} fill="#8884d8" dataKey="amount" nameKey="category" onMouseEnter={onPieEnter} onMouseLeave={onPieLeave}>
+                    {budgetItems.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
                   </Pie>
-                  <Tooltip 
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const value = Number(payload[0].value);
-                        return (
-                          <div className="bg-white border border-gray-200 p-2 rounded-lg shadow-lg">
+                  <Tooltip content={({
+                  active,
+                  payload
+                }) => {
+                  if (active && payload && payload.length) {
+                    const value = Number(payload[0].value);
+                    return <div className="bg-white border border-gray-200 p-2 rounded-lg shadow-lg">
                             <p className="font-medium">{payload[0].name}</p>
                             <p className="text-blue-600">${value.toLocaleString()}</p>
-                            <p className="text-gray-500">{((value / netMonthlyIncome) * 100).toFixed(1)}%</p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
+                            <p className="text-gray-500">{(value / netMonthlyIncome * 100).toFixed(1)}%</p>
+                          </div>;
+                  }
+                  return null;
+                }} />
                 </PieChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Phase1;
