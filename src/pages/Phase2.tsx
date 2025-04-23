@@ -267,7 +267,7 @@ const Phase2 = () => {
                     <tr key={index} className="border-b hover:bg-gray-50">
                       <td className="py-3">{item.name}</td>
                       <td className="text-right py-3">${item.amount.toLocaleString()}</td>
-                      <td className="py-3">
+                      <td className="py-3 pl-4 text-gray-600">
                         {item.name === "Medical (birth + OB)" && "Assumes insurance coverage with deductible/copays"}
                         {item.name === "Nursery & gear" && "Includes crib, furniture, stroller, car seat"}
                         {item.name === "Diapers/formula/supplies" && "First year essentials"}
