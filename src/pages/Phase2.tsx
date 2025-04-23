@@ -259,7 +259,7 @@ const Phase2 = () => {
                   <tr className="border-b">
                     <th className="text-left py-3">Item</th>
                     <th className="text-right py-3">Cost</th>
-                    <th className="text-left py-3"> Notes</th>
+                    <th className="text-left py-3">     _Notes</th>
                   </tr>
                 </thead>
                 <tbody>
