@@ -179,8 +179,55 @@ const Phase1 = () => {
       </g>;
   };
 
-  const getInsuranceAnnual = (label: string) => {
-    const cat = budgetItems.find(item => item.category.toLowerCase().includes(label.toLowerCase()));
+  const getInsuranceAnnual = (type: string) => {
+    let category = '';
+    
+    if (type === 'home') {
+      category = budgetItems.find(item => 
+        item.category.toLowerCase().includes('home') || 
+        item.category.toLowerCase().includes('house') || 
+        (item.category.toLowerCase().includes('insurance') && 
+         !item.category.toLowerCase().includes('auto') && 
+         !item.category.toLowerCase().includes('car') && 
+         !item.category.toLowerCase().includes('health'))
+      )?.category || '';
+    } else if (type === 'auto') {
+      category = budgetItems.find(item => 
+        item.category.toLowerCase().includes('auto') || 
+        item.category.toLowerCase().includes('car') || 
+        (item.category.toLowerCase().includes('vehicle') && 
+         item.category.toLowerCase().includes('insurance'))
+      )?.category || '';
+    }
+    
+    const cat = budgetItems.find(item => 
+      item.category.toLowerCase().includes(category.toLowerCase()) || 
+      (type === 'home' && item.category.toLowerCase().includes('home')) ||
+      (type === 'auto' && item.category.toLowerCase().includes('auto'))
+    );
+    
+    if (!cat && type === 'home') {
+      const generalInsurance = budgetItems.find(item => 
+        item.category === "Insurance" || 
+        item.category.toLowerCase().includes('insurance')
+      );
+      
+      if (generalInsurance) {
+        return (generalInsurance.amount * 12) / 2;
+      }
+    }
+    
+    if (!cat && type === 'auto') {
+      const generalInsurance = budgetItems.find(item => 
+        item.category === "Insurance" || 
+        item.category.toLowerCase().includes('insurance')
+      );
+      
+      if (generalInsurance) {
+        return (generalInsurance.amount * 12) / 2;
+      }
+    }
+    
     if (!cat) return 0;
     return cat.amount * 12;
   };
