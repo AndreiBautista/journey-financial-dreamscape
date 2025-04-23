@@ -148,16 +148,79 @@ const Phase1 = () => {
   };
 
   useEffect(() => {
-    const autoInsuranceElement = document.getElementById('currentPremium') as HTMLInputElement;
-    const homeInsuranceElement = document.getElementById('currentHomePremium') as HTMLInputElement;
+    const updatePremiumValues = () => {
+      const autoInsuranceElement = document.getElementById('currentPremium') as HTMLInputElement;
+      const homeInsuranceElement = document.getElementById('currentHomePremium') as HTMLInputElement;
+      
+      if (autoInsuranceElement) {
+        const autoValue = Number(autoInsuranceElement.value) || 0;
+        setCurrentAutoPremium(autoValue);
+      }
+      
+      if (homeInsuranceElement) {
+        const homeValue = Number(homeInsuranceElement.value) || 0;
+        setCurrentHomePremium(homeValue);
+      }
+    };
     
-    if (autoInsuranceElement && homeInsuranceElement) {
-      const autoValue = Number(autoInsuranceElement.value) || 0;
-      const homeValue = Number(homeInsuranceElement.value) || 0;
-      setCurrentAutoPremium(autoValue);
-      setCurrentHomePremium(homeValue);
+    updatePremiumValues();
+    
+    const observer = new MutationObserver(updatePremiumValues);
+    
+    const autoElement = document.getElementById('currentPremium');
+    if (autoElement) {
+      observer.observe(autoElement, { attributes: true, childList: true, subtree: true });
     }
-  }, []); // Only runs once on component mount
+    
+    const homeElement = document.getElementById('currentHomePremium');
+    if (homeElement) {
+      observer.observe(homeElement, { attributes: true, childList: true, subtree: true });
+    }
+    
+    const handleInputChange = () => {
+      updatePremiumValues();
+    };
+    
+    if (autoElement) {
+      autoElement.addEventListener('input', handleInputChange);
+    }
+    if (homeElement) {
+      homeElement.addEventListener('input', handleInputChange);
+    }
+    
+    return () => {
+      observer.disconnect();
+      if (autoElement) {
+        autoElement.removeEventListener('input', handleInputChange);
+      }
+      if (homeElement) {
+        homeElement.removeEventListener('input', handleInputChange);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const autoInsuranceElement = document.getElementById('currentPremium') as HTMLInputElement;
+      const homeInsuranceElement = document.getElementById('currentHomePremium') as HTMLInputElement;
+      
+      if (autoInsuranceElement) {
+        const autoValue = Number(autoInsuranceElement.value) || 0;
+        if (autoValue !== currentAutoPremium) {
+          setCurrentAutoPremium(autoValue);
+        }
+      }
+      
+      if (homeInsuranceElement) {
+        const homeValue = Number(homeInsuranceElement.value) || 0;
+        if (homeValue !== currentHomePremium) {
+          setCurrentHomePremium(homeValue);
+        }
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [currentAutoPremium, currentHomePremium]);
 
   const monthlyAutoPremium = currentAutoPremium / 12;
   const monthlyHomePremium = currentHomePremium / 12;
