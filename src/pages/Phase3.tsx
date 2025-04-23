@@ -60,7 +60,7 @@ const Phase3 = () => {
                   <XAxis dataKey="year" />
                   <YAxis 
                     tickFormatter={(tick) => `$${(tick / 1000).toFixed(0)}K`}
-                    label={{ value: 'Balance ($)', angle: -90, position: 'insideLeft' }}
+                    label={{ value: '', angle: -90, position: 'insideLeft' }}
                   />
                   <Tooltip 
                     formatter={(value) => [`$${Number(value).toLocaleString()}`, '']}
