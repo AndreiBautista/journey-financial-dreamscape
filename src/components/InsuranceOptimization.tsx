@@ -160,9 +160,6 @@ const InsuranceOptimization = ({
     hasHSA,
     healthDeductible,
     hasBundle,
-    currentAutoPremium,
-    currentHomePremium,
-    bundleDiscount,
     annualBundleSavings
   ]);
   

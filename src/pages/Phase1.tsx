@@ -238,8 +238,11 @@ const Phase1 = () => {
 
   const homeAnnual = getInsuranceAnnual('home');
   const autoAnnual = getInsuranceAnnual('auto');
-  const totalInsuranceAnnual = autoAnnual + homeAnnual;
-  const totalInsuranceMonthly = totalInsuranceAnnual / 12;
+  
+  const autoMonthly = autoAnnualPremium / 12;
+  const homeMonthly = homeAnnualPremium / 12;
+  const totalInsuranceMonthly = autoMonthly + homeMonthly;
+  
   const insuranceBundleSavings = totalInsuranceMonthly * bundleDiscountRate;
   const insuranceBundledTotal = totalInsuranceMonthly - insuranceBundleSavings;
   const annualBundleSavings = insuranceBundleSavings * 12;
@@ -517,7 +520,7 @@ const Phase1 = () => {
                   })}</span>
                 </div>
               </div>
-              <div className="text-xs text-gray-400 mt-2">*Based on current Auto ($4,059/yr) and Home ($3,564/yr) insurance premiums.</div>
+              <div className="text-xs text-gray-400 mt-2">*Based on current Auto (${autoAnnualPremium.toLocaleString()}/yr = ${autoMonthly.toLocaleString(undefined, {maximumFractionDigits: 0})}/mo) and Home (${homeAnnualPremium.toLocaleString()}/yr = ${homeMonthly.toLocaleString(undefined, {maximumFractionDigits: 0})}/mo) insurance premiums.</div>
             </CardContent>
           </Card>
         </div>
