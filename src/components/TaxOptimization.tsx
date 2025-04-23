@@ -36,7 +36,7 @@ const TaxOptimization = () => {
   const [educatorExpenses, setEducatorExpenses] = useState(0);
 
   // Kentucky state tax rate
-  const [kyTaxRate, setKyTaxRate] = useState(4.5);
+  const [kyTaxRate, setKyTaxRate] = useState(4.00);
 
   // Calculated values
   const [taxableIncome, setTaxableIncome] = useState(0);

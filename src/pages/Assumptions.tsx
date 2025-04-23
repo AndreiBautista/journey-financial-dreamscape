@@ -54,7 +54,7 @@ const Assumptions = () => {
       content: [
         ["Category", "Value", "Notes"],
         ["Federal Filing", "Married Filing Jointly", "2025 brackets"],
-        ["Kentucky State Tax", "4.5%", "Flat"],
+        ["Kentucky State Tax", "4.00%", "Flat"],
         ["Standard Deduction", "$29,600", "2025 standard"],
         ["Katie 401(k) Growth", "From 4% → 10%", "Ramp up over 4 years"],
         ["Chad Roth IRA", "Begin $3,000 → $6,500", "Increase over 3 years"],
