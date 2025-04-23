@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,6 +10,13 @@ import { ChevronRight } from "lucide-react";
 import { BudgetPieChart } from "@/components/charts/BudgetPieChart";
 import { NetWorthChart } from "@/components/charts/NetWorthChart";
 import { MilestoneTracker, Milestone } from "@/components/MilestoneTracker";
+import { IncomeCard } from "@/components/dashboard/IncomeCard";
+import { MonthlyIncomeCard } from "@/components/dashboard/MonthlyIncomeCard";
+import { NetWorthCard } from "@/components/dashboard/NetWorthCard";
+import { DebtOverviewCard } from "@/components/dashboard/DebtOverviewCard"; 
+import { PhaseButtons } from "@/components/dashboard/PhaseButtons";
+import { DashboardCharts } from "@/components/dashboard/DashboardCharts";
+import { MilestoneCard } from "@/components/dashboard/MilestoneCard";
 
 const Index = () => {
   const [track, setTrack] = useState<"aggressive" | "moderate">("aggressive");
@@ -218,7 +226,8 @@ const Index = () => {
     interestRate: "Average"
   }];
 
-  return <div className="container mx-auto py-8 px-4">
+  return (
+    <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-blue-600 mb-2">Chad & Katie's Financial Journey</h1>
       <p className="text-gray-600 mb-8">Interactive financial planning and tracking dashboard</p>
       
@@ -229,163 +238,34 @@ const Index = () => {
         </TabsList>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-2">
-              <CardTitle>Total Income</CardTitle>
-              <CardDescription>Combined annual income</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">${incomeData.total.toLocaleString()}</div>
-              <div className="text-sm text-gray-500 mt-1">
-                Katie: ${incomeData.katie.toLocaleString()} | Chad: ${incomeData.chad.toLocaleString()}
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-2">
-              <CardTitle>Net Monthly Income</CardTitle>
-              <CardDescription>After taxes and deductions</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">${taxData.monthlyIncome.toLocaleString()}</div>
-              <div className="text-sm text-gray-500 mt-1">
-                Federal Tax: ${taxData.federalTax.toLocaleString()} | KY Tax: ${taxData.stateTax.toLocaleString()}
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader className="pb-2">
-              <CardTitle>Year 10 Net Worth</CardTitle>
-              <CardDescription>Projected net worth</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">
-                ${(track === "aggressive" ? 387684 : 196243).toLocaleString()}
-              </div>
-              <div className="text-sm text-gray-500 mt-1">
-                {track === "aggressive" ? "Aggressive strategy (+97% vs moderate)" : "Moderate strategy"}
-              </div>
-            </CardContent>
-          </Card>
+          <IncomeCard income={incomeData} />
+          <MonthlyIncomeCard taxData={taxData} />
+          <NetWorthCard track={track} />
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader>
-              <CardTitle>Net Worth Projection</CardTitle>
-              <CardDescription>10-year forecast based on selected strategy</CardDescription>
-            </CardHeader>
-            <CardContent className="h-96">
-              <NetWorthChart data={netWorthProjection} track={track} />
-            </CardContent>
-          </Card>
-          
-          <Card className="shadow-lg hover:shadow-xl transition-all duration-300">
-            <CardHeader>
-              <CardTitle>Budget Breakdown</CardTitle>
-              <CardDescription>Monthly expenses distribution</CardDescription>
-            </CardHeader>
-            <CardContent className="h-96">
-              <BudgetPieChart data={budgetItems.map(({
-              category,
-              amount,
-              color
-            }) => ({
-              name: category,
-              value: amount,
-              color
-            }))} totalAmount={totalMonthlyIncome} />
-              <div className="mt-6 text-gray-800 text-sm">
-                
-                <div className="flex justify-between items-center">
-                  
-                  
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <DashboardCharts 
+          netWorthProjection={netWorthProjection} 
+          track={track} 
+          budgetItems={budgetItems} 
+          totalMonthlyIncome={totalMonthlyIncome} 
+        />
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <Card className="shadow-lg hover:shadow-xl transition-all duration-300 lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Milestone Tracking</CardTitle>
-              <CardDescription>Dynamically update your key financial milestones</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <MilestoneTracker milestones={milestones} setMilestones={setMilestones} />
-              <div className="flex justify-end mt-4">
-                <Link to={track === "aggressive" ? "/phase1" : "/phase1"}>
-                  <Button variant="outline" className="text-blue-600 hover:text-blue-700">
-                    View Detailed Plan <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+          <MilestoneCard 
+            milestones={milestones} 
+            setMilestones={setMilestones} 
+            track={track} 
+          />
           
-          <Card className="shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col">
-            <CardHeader>
-              <CardTitle>Debt Overview</CardTitle>
-              <CardDescription>Total debt: ${totalDebt.toLocaleString()}</CardDescription>
-            </CardHeader>
-            <CardContent className="flex-1 p-6 pt-0">
-              <div className="space-y-4 overflow-y-auto scroll-blue max-h-[350px]">
-                {debtData.map((debt, index) => <div key={index} className="border-b pb-3 last:border-b-0 last:pb-0">
-                    <div className="flex justify-between">
-                      <span className="font-medium">{debt.name}</span>
-                      <span>${debt.amount.toLocaleString()}</span>
-                    </div>
-                    <div className="text-sm text-gray-500 mt-1 px-[24px] my-0">
-                      {debt.interestRate} interest rate
-                    </div>
-                  </div>)}
-              </div>
-              <div className="flex justify-end mt-4">
-                <Link to="/phase1">
-                  <Button variant="outline" className="text-blue-600 hover:text-blue-700">
-                    Debt Management <ChevronRight className="ml-1 h-4 w-4" />
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
+          <DebtOverviewCard 
+            totalDebt={totalDebt} 
+            debtData={debtData} 
+          />
         </div>
       </Tabs>
       
-      <div className="flex flex-col md:flex-row gap-4 justify-center mt-10">
-        <Link to="/phase1">
-          <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 w-full md:w-auto">
-            Phase 1: Stabilization <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
-        </Link>
-        
-        <Link to="/phase2">
-          <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 w-full md:w-auto">
-            Phase 2: Family & Growth <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
-        </Link>
-        
-        <Link to="/phase3">
-          <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 w-full md:w-auto">
-            Phase 3: Lake & Wealth <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
-        </Link>
-        
-        <Link to="/calculator">
-          <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 w-full md:w-auto">
-            Compound Calculator <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
-        </Link>
-        
-        <Link to="/assumptions">
-          <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 w-full md:w-auto">
-            Assumptions <ChevronRight className="ml-1 h-4 w-4" />
-          </Button>
-        </Link>
-      </div>
+      <PhaseButtons />
+      
       <style>{`
         .scroll-blue::-webkit-scrollbar {
           width: 8px;
@@ -400,7 +280,8 @@ const Index = () => {
           scrollbar-color: #3b82f6 #e0eaff;
         }
       `}</style>
-    </div>;
+    </div>
+  );
 };
 
 export default Index;
