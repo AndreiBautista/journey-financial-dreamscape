@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -101,7 +100,6 @@ const Phase1 = () => {
     setActiveIndex(undefined);
   };
 
-  // Custom active shape for pie chart with label lines
   const renderActiveShape = (props: any) => {
     const RADIAN = Math.PI / 180;
     const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
@@ -144,6 +142,13 @@ const Phase1 = () => {
       </g>
     );
   };
+
+  const home = budgetItems.find(i => i.category.toLowerCase().includes("home"))?.amount ?? 0;
+  const auto = budgetItems.find(i => i.category.toLowerCase().includes("auto"))?.amount ?? 0;
+  const insurance = budgetItems.find(i => i.category.toLowerCase().includes("insurance"))?.amount ?? 0;
+  const estimatedPremium = Math.max(home + auto, insurance);
+  const bundleSavings = estimatedPremium * 0.12;
+  const bundledTotal = estimatedPremium - bundleSavings;
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -341,6 +346,36 @@ const Phase1 = () => {
 
       <div className="mt-12">
         <h2 className="text-2xl font-bold text-blue-600 mb-6">Insurance Optimization</h2>
+
+        <div className="mb-6">
+          <Card className="bg-blue-50/40 border-blue-200">
+            <CardHeader>
+              <CardTitle className="text-blue-700 text-base flex items-center">
+                Bundle Home &amp; Auto Insurance
+              </CardTitle>
+              <CardDescription>Estimate your monthly bundled insurance premium</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col md:flex-row items-center gap-4 text-blue-800">
+                <div>
+                  <span className="font-semibold">Current Insurance Premium:</span>{" "}
+                  <span className="font-mono">${estimatedPremium.toLocaleString()}</span>
+                  <span className="ml-2 text-xs">/mo</span>
+                </div>
+                <div>
+                  <span className="font-semibold">Bundled Estimate (12% off):</span>{" "}
+                  <span className="font-mono">${bundledTotal.toLocaleString(undefined, {maximumFractionDigits:0})}</span>
+                  <span className="ml-2 text-xs">/mo</span>
+                </div>
+                <div>
+                  <span className="font-semibold text-green-600">Estimated Monthly Savings:</span>{" "}
+                  <span className="font-mono text-green-700">-${bundleSavings.toLocaleString(undefined, {maximumFractionDigits:0})}</span>
+                </div>
+              </div>
+              <div className="text-xs text-gray-400 mt-2">*Estimate based on budgeted premium(s) above; real quotes may differ.</div>
+            </CardContent>
+          </Card>
+        </div>
         <InsuranceOptimization />
       </div>
       
