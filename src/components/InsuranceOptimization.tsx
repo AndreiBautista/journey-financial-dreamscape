@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,7 +10,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { InfoIcon, ShieldIcon, AlertTriangleIcon } from "lucide-react";
 
-const InsuranceOptimization = () => {
+interface InsuranceOptimizationProps {
+  onAutoInsuranceChange?: (value: number) => void;
+  onHomeInsuranceChange?: (value: number) => void;
+  onBundleDiscountChange?: (value: number) => void;
+  annualBundleSavings?: number;
+}
+
+const InsuranceOptimization = ({
+  onAutoInsuranceChange,
+  onHomeInsuranceChange,
+  onBundleDiscountChange,
+  annualBundleSavings = 0
+}: InsuranceOptimizationProps) => {
   // Emergency Fund
   const [emergencyFund, setEmergencyFund] = useState(4000);
   const [emergencyFundGoal, setEmergencyFundGoal] = useState(10000);
@@ -38,7 +49,7 @@ const InsuranceOptimization = () => {
   
   // Life Insurance
   const [katieLifeInsurance, setKatieLifeInsurance] = useState(80000);
-  const [chadLifeInsurance, setChadLifeInsurance] = useState(0); // Fixed undefined to 0
+  const [chadLifeInsurance, setChadLifeInsurance] = useState(0);
   const [recommendedLifeInsurance, setRecommendedLifeInsurance] = useState(0);
   
   // Boat Insurance
@@ -53,7 +64,7 @@ const InsuranceOptimization = () => {
   
   // Insurance Bundling
   const [hasBundle, setHasBundle] = useState(false);
-  const [bundleDiscount, setBundleDiscount] = useState(0.12); // 12% discount rate
+  const [bundleDiscount, setBundleDiscount] = useState(0.12);
   const [bundleSavings, setBundleSavings] = useState(0);
   
   // Total net worth (simplified calculation)
@@ -98,7 +109,7 @@ const InsuranceOptimization = () => {
   useEffect(() => {
     setUmbrellaRecommended(netWorth > 500000);
     if (netWorth > 500000 && !hasUmbrellaPolicy) {
-      setUmbrellaPremium(400); // Estimated annual premium
+      setUmbrellaPremium(400);
     }
   }, [netWorth, hasUmbrellaPolicy]);
   
@@ -133,7 +144,7 @@ const InsuranceOptimization = () => {
     }
     
     if (!hasBundle) {
-      recommendations.push(`Bundle your home and auto insurance to save approximately $${Math.round((currentAutoPremium + currentHomePremium) * bundleDiscount).toLocaleString()} annually.`);
+      recommendations.push(`Bundle your home and auto insurance to save approximately $${Math.round(annualBundleSavings).toLocaleString()} annually.`);
     }
     
     setInsuranceRecommendations(recommendations);
@@ -151,12 +162,12 @@ const InsuranceOptimization = () => {
     hasBundle,
     currentAutoPremium,
     currentHomePremium,
-    bundleDiscount
+    bundleDiscount,
+    annualBundleSavings
   ]);
   
   // Update boat insurance premium
   const calculateBoatInsurance = () => {
-    // Basic calculation for boat insurance (typically 1-1.5% of boat value)
     const premium = Math.round(boatValue * 0.0125);
     setBoatInsurancePremium(premium);
     setHasBoatInsurance(true);
@@ -169,38 +180,50 @@ const InsuranceOptimization = () => {
   
   // Optimize insurance coverage
   const optimizeInsurance = () => {
-    // Add boat insurance if missing
     if (!hasBoatInsurance) {
       calculateBoatInsurance();
     }
     
-    // Increase life insurance if too low
     if (katieLifeInsurance < recommendedLifeInsurance) {
       setKatieLifeInsurance(recommendedLifeInsurance);
     }
     
-    // Add umbrella policy if recommended
     if (umbrellaRecommended && !hasUmbrellaPolicy) {
       addUmbrellaPolicy();
     }
     
-    // Switch to HSA if eligible
     if (!hasHSA && healthDeductible > 1500) {
       setHasHSA(true);
-      setHsaContribution(3850); // Individual HSA contribution limit for 2023
+      setHsaContribution(3850);
     }
     
-    // Raise deductibles if emergency fund allows
     if (readyForHigherDeductibles && lowDeductible) {
       setLowDeductible(false);
     }
     
-    // Bundle insurance if not already bundled
     if (!hasBundle) {
       setHasBundle(true);
     }
   };
 
+  useEffect(() => {
+    if (onAutoInsuranceChange) {
+      onAutoInsuranceChange(currentAutoPremium);
+    }
+  }, [currentAutoPremium, onAutoInsuranceChange]);
+
+  useEffect(() => {
+    if (onHomeInsuranceChange) {
+      onHomeInsuranceChange(currentHomePremium);
+    }
+  }, [currentHomePremium, onHomeInsuranceChange]);
+  
+  useEffect(() => {
+    if (onBundleDiscountChange) {
+      onBundleDiscountChange(bundleDiscount);
+    }
+  }, [bundleDiscount, onBundleDiscountChange]);
+  
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -671,7 +694,6 @@ const InsuranceOptimization = () => {
                   )}
                 </div>
                 
-                {/* Insurance Bundling Section */}
                 <div className="space-y-4 pt-4 border-t">
                   <div className="flex items-center justify-between">
                     <div>

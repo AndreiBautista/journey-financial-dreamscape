@@ -87,6 +87,10 @@ const Phase1 = () => {
   const [newAmount, setNewAmount] = useState(0);
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
+  const [autoAnnualPremium, setAutoAnnualPremium] = useState(4059);
+  const [homeAnnualPremium, setHomeAnnualPremium] = useState(3564);
+  const [bundleDiscountRate, setBundleDiscountRate] = useState(0.12);
+
   const totalBudget = budgetItems.reduce((sum, item) => sum + item.amount, 0);
   const unallocatedAmount = netMonthlyIncome - totalBudget;
 
@@ -234,10 +238,11 @@ const Phase1 = () => {
 
   const homeAnnual = getInsuranceAnnual('home');
   const autoAnnual = getInsuranceAnnual('auto');
-  const totalInsuranceAnnual = homeAnnual + autoAnnual;
+  const totalInsuranceAnnual = autoAnnual + homeAnnual;
   const totalInsuranceMonthly = totalInsuranceAnnual / 12;
-  const insuranceBundleSavings = totalInsuranceMonthly * 0.12;
+  const insuranceBundleSavings = totalInsuranceMonthly * bundleDiscountRate;
   const insuranceBundledTotal = totalInsuranceMonthly - insuranceBundleSavings;
+  const annualBundleSavings = insuranceBundleSavings * 12;
 
   return <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-blue-600 mb-8">Phase 1: Stabilization (Years 1-2)</h1>
@@ -428,7 +433,54 @@ const Phase1 = () => {
       </Tabs>
 
       <div className="mt-12">
-        
+        <h2 className="text-2xl font-bold text-blue-600 mb-6">Emergency Fund Status</h2>
+        <Card className="shadow-lg hover:shadow-xl transition-all duration-300 max-w-xl mx-auto mb-8">
+          <CardHeader>
+            <CardTitle>Emergency Fund Status</CardTitle>
+            <CardDescription>Your safety net for higher deductibles</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex justify-between mb-1">
+              <span className="font-medium">Emergency Fund</span>
+              <span>$4,000 / $10,000</span>
+            </div>
+            <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-blue-500 transition-all duration-500"
+                style={{ width: `40%` }}
+              ></div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 mt-4">
+              <div>
+                <Label htmlFor="currentFund">Current Amount</Label>
+                <Input
+                  id="currentFund"
+                  type="number"
+                  defaultValue={4000}
+                  readOnly
+                />
+              </div>
+              <div>
+                <Label htmlFor="fundGoal">Target Amount</Label>
+                <Input
+                  id="fundGoal"
+                  type="number"
+                  defaultValue={10000}
+                  readOnly
+                />
+              </div>
+            </div>
+            
+            <Alert className="mt-4">
+              <InfoIcon className="h-4 w-4" />
+              <AlertTitle>Building Your Safety Net</AlertTitle>
+              <AlertDescription>
+                Continue building your emergency fund to $10,000 before raising insurance deductibles.
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="mt-12">
@@ -440,7 +492,7 @@ const Phase1 = () => {
               <CardTitle className="text-blue-700 text-base flex items-center">
                 Bundle Home &amp; Auto Insurance
               </CardTitle>
-              <CardDescription>Estimate your monthly bundled insurance premium using your budgeted values below</CardDescription>
+              <CardDescription>Estimate your monthly bundled insurance premium</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col sm:flex-row flex-wrap items-center gap-4 text-blue-800">
@@ -465,11 +517,16 @@ const Phase1 = () => {
                   })}</span>
                 </div>
               </div>
-              <div className="text-xs text-gray-400 mt-2">*Estimate based on your Home/Auto budget rows above; real quotes may differ.</div>
+              <div className="text-xs text-gray-400 mt-2">*Based on current Auto ($4,059/yr) and Home ($3,564/yr) insurance premiums.</div>
             </CardContent>
           </Card>
         </div>
-        <InsuranceOptimization />
+        <InsuranceOptimization 
+          onAutoInsuranceChange={setAutoAnnualPremium}
+          onHomeInsuranceChange={setHomeAnnualPremium}
+          onBundleDiscountChange={setBundleDiscountRate}
+          annualBundleSavings={annualBundleSavings}
+        />
       </div>
       
       <div className="mt-12">
