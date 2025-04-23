@@ -150,6 +150,16 @@ const Phase1 = () => {
   const bundleSavings = estimatedPremium * 0.12;
   const bundledTotal = estimatedPremium - bundleSavings;
 
+  const currentAutoPremium = 1200; // Example annual auto premium
+  const currentHomePremium = 1500; // Example annual home premium
+  const bundleDiscount = 0.12; // Example bundle discount
+
+  const monthlyAutoPremium = currentAutoPremium / 12;
+  const monthlyHomePremium = currentHomePremium / 12;
+  const totalMonthlyPremium = monthlyAutoPremium + monthlyHomePremium;
+  const bundledMonthlyTotal = totalMonthlyPremium * (1 - bundleDiscount);
+  const monthlyBundleSavings = totalMonthlyPremium - bundledMonthlyTotal;
+
   return (
     <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold text-blue-600 mb-8">Phase 1: Stabilization (Years 1-2)</h1>
@@ -359,20 +369,20 @@ const Phase1 = () => {
               <div className="flex flex-col md:flex-row items-center gap-4 text-blue-800">
                 <div>
                   <span className="font-semibold">Current Insurance Premium:</span>{" "}
-                  <span className="font-mono">${estimatedPremium.toLocaleString()}</span>
+                  <span className="font-mono">${totalMonthlyPremium.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
                   <span className="ml-2 text-xs">/mo</span>
                 </div>
                 <div>
                   <span className="font-semibold">Bundled Estimate (12% off):</span>{" "}
-                  <span className="font-mono">${bundledTotal.toLocaleString(undefined, {maximumFractionDigits:0})}</span>
+                  <span className="font-mono">${bundledMonthlyTotal.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
                   <span className="ml-2 text-xs">/mo</span>
                 </div>
                 <div>
                   <span className="font-semibold text-green-600">Estimated Monthly Savings:</span>{" "}
-                  <span className="font-mono text-green-700">-${bundleSavings.toLocaleString(undefined, {maximumFractionDigits:0})}</span>
+                  <span className="font-mono text-green-700">-${monthlyBundleSavings.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
                 </div>
               </div>
-              <div className="text-xs text-gray-400 mt-2">*Estimate based on budgeted premium(s) above; real quotes may differ.</div>
+              <div className="text-xs text-gray-400 mt-2">*Estimate based on your Auto Insurance ($${monthlyAutoPremium.toLocaleString(undefined, {maximumFractionDigits: 0})}/mo) and Home Insurance ($${monthlyHomePremium.toLocaleString(undefined, {maximumFractionDigits: 0})}/mo) premiums above.</div>
             </CardContent>
           </Card>
         </div>
