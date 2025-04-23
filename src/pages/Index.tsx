@@ -361,36 +361,38 @@ const Index = () => {
               <CardTitle>Budget Breakdown</CardTitle>
               <CardDescription>Monthly expenses distribution</CardDescription>
             </CardHeader>
-            <CardContent className="h-96">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    activeIndex={activeIndex}
-                    activeShape={renderActiveShape}
-                    data={budgetItems}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius="20%"
-                    outerRadius="45%"
-                    fill="#8884d8"
-                    dataKey="amount"
-                    nameKey="category"
-                    onMouseEnter={onPieEnter}
-                    onMouseLeave={onPieLeave}
-                  >
-                    {budgetItems.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    label="Category"
-                    labelStyle={{ color: '#333' }}
-                    formatter={(value, name, props) => {
-                      return `${name}: ${value.toLocaleString()}`;
-                    }}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
+            <CardContent className="h-[600px]">
+              <div className="w-full h-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      activeIndex={activeIndex}
+                      activeShape={renderActiveShape}
+                      data={budgetItems}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius="25%"
+                      outerRadius="55%"
+                      fill="#8884d8"
+                      dataKey="amount"
+                      nameKey="category"
+                      onMouseEnter={onPieEnter}
+                      onMouseLeave={onPieLeave}
+                    >
+                      {budgetItems.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip 
+                      label="Category"
+                      labelStyle={{ color: '#333' }}
+                      formatter={(value, name, props) => {
+                        return `${name}: ${value.toLocaleString()}`;
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         </div>
